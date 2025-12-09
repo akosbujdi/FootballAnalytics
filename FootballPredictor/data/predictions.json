@@ -1,0 +1,26 @@
+[
+    {
+        "model": "poisson",
+        "prediction_date": "2025-12-09T13:15:40.917042",
+        "fixture_date": "2025-12-13T20:00:00Z",
+        "home_team": "Arsenal FC",
+        "away_team": "Wolverhampton Wanderers FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2025-12-09T13:15:53.950738",
+        "fixture_date": "2025-12-14T14:00:00Z",
+        "home_team": "Sunderland AFC",
+        "away_team": "Newcastle United FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2025-12-09T13:16:14.281329",
+        "fixture_date": "2025-12-13T15:00:00Z",
+        "home_team": "Chelsea FC",
+        "away_team": "Everton FC",
+        "predicted_score": "1-0"
+    }
+]

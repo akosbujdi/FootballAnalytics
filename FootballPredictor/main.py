@@ -2,7 +2,10 @@ import json
 import os
 import requests
 from datetime import datetime, timezone
-from stats_model import predict_score_poisson
+from stats_model import simulate_match
+from utils.prediction_storage import save_prediction
+from utils.data_updater import append_new_matches
+from utils.name_mapping import normalize_team_name
 
 # load api key from .env
 from dotenv import load_dotenv
@@ -64,16 +67,18 @@ def display_team_menu(teams):
 def get_next_fixture(team_id, api_key):
     url = f"https://api.football-data.org/v4/teams/{team_id}/matches"
     headers = {"X-Auth-Token": api_key}
-    params = {"status": "SCHEDULED", "limit": 1}
+    params = {"status": "SCHEDULED", "limit": 1, "competitions": "PL"}
 
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
 
     if data['matches']:
         match = data['matches'][0]
+        home = normalize_team_name(match['homeTeam']['name'])
+        away = normalize_team_name(match['awayTeam']['name'])
         return {
-            "home": match['homeTeam']['name'],
-            "away": match['awayTeam']['name'],
+            "home": home,
+            "away": away,
             "date": match['utcDate']
         }
     return None
@@ -116,7 +121,7 @@ def clear_outdated_cache():
 
 
 # prediction menu (after fixture)
-def prediction_menu(home_team, away_team):
+def prediction_menu(home_team, away_team, fixture_date):
     while True:
         print("Predict the scoreline using:")
         print("1. Statistical (Poisson)")
@@ -129,9 +134,32 @@ def prediction_menu(home_team, away_team):
             continue
 
         if choice == 1:
-            pred_home, pred_away = predict_score_poisson(home_team, away_team)
-            print(f"Predicted score: {home_team} {pred_home} - {pred_away} {away_team}")
-            break
+            if choice == 1:
+                print("\nRunning Poisson simulation...\n")
+                result = simulate_match(
+                    model_name="poisson",
+                    home_team=home_team,
+                    away_team=away_team,
+                    n_simulations=1000
+                )
+
+
+                print(f"Most likely scoreline:\n{home_team} {result["top_score"]} {away_team}\nProbability: {result["top_score_percentage"]:.2%}\n")
+
+                probs = result["probabilities"]
+                print(f"{home_team} win probability: {probs['home_win']:.2%}")
+                print(f"Draw probability: {probs['draw']:.2%}")
+                print(f"{away_team} win probability:  {probs['away_win']:.2%}\n")
+
+                save_prediction(
+                    model_name=result["model_used"],
+                    home_team=home_team,
+                    away_team=away_team,
+                    top_score=result["top_score"],
+                    fixture_date=fixture_date
+                )
+
+                break
         elif choice == 2:
             print("\nAI method not implemented yet. Please choose another option.\n")
         else:
@@ -141,6 +169,8 @@ def prediction_menu(home_team, away_team):
 # main method
 def main():
     clear_outdated_cache()
+    append_new_matches(API_KEY)
+
     teams = load_teams()
     team_id, team_name = display_team_menu(teams)
 
@@ -153,7 +183,7 @@ def main():
     else:
         print("No upcoming fixture found for this team.")
 
-    prediction_menu(fixture['home'], fixture['away'])
+    prediction_menu(fixture['home'], fixture['away'], fixture['date'])
 
 
 if __name__ == "__main__":
