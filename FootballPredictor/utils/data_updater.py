@@ -4,6 +4,7 @@ import requests
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 from utils.name_mapping import normalize_team_name
+
 load_dotenv()
 
 HISTORICAL_CSV = "data/historical_matches.csv"
@@ -111,6 +112,7 @@ def append_new_matches(api_key):
 if __name__ == "__main__":
     # Example manual run
     from dotenv import load_dotenv
+
     load_dotenv()
 
     api_key = os.getenv("FOOTBALL_API_KEY")

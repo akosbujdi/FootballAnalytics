@@ -72,5 +72,6 @@ TEAM_NAME_MAP = {
     "Sunderland AFC": "Sunderland AFC",
 }
 
+
 def normalize_team_name(name: str) -> str:
     return TEAM_NAME_MAP.get(name, name)

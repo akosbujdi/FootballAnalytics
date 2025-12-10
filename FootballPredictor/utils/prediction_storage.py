@@ -5,6 +5,7 @@ from utils.name_mapping import normalize_team_name
 
 PRED_FILE = "data/predictions.json"
 
+
 def save_prediction(model_name, home_team, away_team, top_score, fixture_date):
     os.makedirs("data", exist_ok=True)
 

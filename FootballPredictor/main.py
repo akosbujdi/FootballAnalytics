@@ -143,8 +143,8 @@ def prediction_menu(home_team, away_team, fixture_date):
                     n_simulations=1000
                 )
 
-
-                print(f"Most likely scoreline:\n{home_team} {result["top_score"]} {away_team}\nProbability: {result["top_score_percentage"]:.2%}\n")
+                print(
+                    f"Most likely scoreline:\n{home_team} {result["top_score"]} {away_team}\nProbability: {result["top_score_percentage"]:.2%}\n")
 
                 probs = result["probabilities"]
                 print(f"{home_team} win probability: {probs['home_win']:.2%}")

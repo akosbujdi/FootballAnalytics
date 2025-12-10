@@ -22,5 +22,21 @@
         "home_team": "Chelsea FC",
         "away_team": "Everton FC",
         "predicted_score": "1-0"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2025-12-10T01:35:54.272669",
+        "fixture_date": "2025-12-13T15:00:00Z",
+        "home_team": "Liverpool FC",
+        "away_team": "Brighton & Hove Albion FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2025-12-10T12:38:30.376058",
+        "fixture_date": "2025-12-13T15:00:00Z",
+        "home_team": "Liverpool FC",
+        "away_team": "Brighton & Hove Albion FC",
+        "predicted_score": "1-1"
     }
 ]
