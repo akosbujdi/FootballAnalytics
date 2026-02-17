@@ -1,9 +1,8 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+historical_matches_to_use = pd.read_csv("data/historical_matches.csv")
 
-historical_matches = pd.read_csv("data/historical_matches.csv") # comment out for train/test split
-
-def predict_score_poisson(home_team, away_team): # add historical matches for train/test split (historical_matches)
+def predict_score_poisson(home_team, away_team, historical_matches):
     # Home team stats
     home_scored = historical_matches[historical_matches['homeTeam'] == home_team]['homeGoals'].mean()
     home_conceded = historical_matches[historical_matches['homeTeam'] == home_team]['awayGoals'].mean()
@@ -30,8 +29,8 @@ def predict_score_poisson(home_team, away_team): # add historical matches for tr
     pred_away = int(np.round(np.random.poisson(expected_away)))
 
     # Slightly inflate expected goals to allow bolder outcomes
-    expected_home *= np.random.uniform(0.95, 1.2)
-    expected_away *= np.random.uniform(0.95, 1.2)
+    expected_home *= np.random.uniform(0.95, 1.05)
+    expected_away *= np.random.uniform(0.95, 1.05)
 
     return pred_home, pred_away
 
@@ -51,7 +50,7 @@ def simulate_match(model_name, home_team, away_team, n_simulations=10000):
     score_counts = {}
 
     for _ in range(n_simulations):
-        h, a = prediction_fn(home_team, away_team)
+        h, a = prediction_fn(home_team, away_team, historical_matches_to_use)
 
         if h > a:
             home_wins += 1

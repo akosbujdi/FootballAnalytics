@@ -89,5 +89,10 @@ metrics, results = evaluate_model_after_date(
     "2025-11-01 20:00"
 )
 
-print(metrics)
 print(results)
+print(f"\nMatches evaluated: {metrics['matches_evaluated']:}\nExact score accuracy: {metrics['exact_score_accuracy']:.2%}\nWinner accuracy: {metrics['winner_accuracy']:.2%}\nMean absolute error: {metrics['mean_absolute_error']}")
+
+# add recency bias into current model
+# implement ai model(s)
+# create more predicting outcomes
+# compare models more precisely -> then web!

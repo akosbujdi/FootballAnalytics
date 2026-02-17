@@ -73,5 +73,6 @@ TEAM_NAME_MAP = {
 }
 
 
+# enforce correct naming of teams
 def normalize_team_name(name: str) -> str:
     return TEAM_NAME_MAP.get(name, name)

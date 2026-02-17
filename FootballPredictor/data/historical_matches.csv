@@ -909,3 +909,113 @@ date,homeTeam,awayTeam,homeGoals,awayGoals
 07/12/2025 14:00,Brighton & Hove Albion FC,West Ham United FC,1,1
 07/12/2025 16:30,Fulham FC,Crystal Palace FC,1,2
 08/12/2025 20:00,Wolverhampton Wanderers FC,Manchester United FC,1,4
+13/12/2025 15:00,Chelsea FC,Everton FC,2,0
+13/12/2025 15:00,Liverpool FC,Brighton & Hove Albion FC,2,0
+13/12/2025 17:30,Burnley FC,Fulham FC,2,3
+13/12/2025 20:00,Arsenal FC,Wolverhampton Wanderers FC,2,1
+14/12/2025 14:00,Sunderland AFC,Newcastle United FC,1,0
+14/12/2025 14:00,Crystal Palace FC,Manchester City FC,0,3
+14/12/2025 14:00,Nottingham Forest FC,Tottenham Hotspur FC,3,0
+14/12/2025 14:00,West Ham United FC,Aston Villa FC,2,3
+14/12/2025 16:30,Brentford FC,Leeds United FC,1,1
+15/12/2025 20:00,Manchester United FC,AFC Bournemouth,4,4
+20/12/2025 12:30,Newcastle United FC,Chelsea FC,2,2
+20/12/2025 15:00,AFC Bournemouth,Burnley FC,1,1
+20/12/2025 15:00,Brighton & Hove Albion FC,Sunderland AFC,0,0
+20/12/2025 15:00,Manchester City FC,West Ham United FC,3,0
+20/12/2025 15:00,Wolverhampton Wanderers FC,Brentford FC,0,2
+20/12/2025 17:30,Tottenham Hotspur FC,Liverpool FC,1,2
+20/12/2025 20:00,Everton FC,Arsenal FC,0,1
+20/12/2025 20:00,Leeds United FC,Crystal Palace FC,4,1
+21/12/2025 16:30,Aston Villa FC,Manchester United FC,2,1
+22/12/2025 20:00,Fulham FC,Nottingham Forest FC,1,0
+26/12/2025 20:00,Manchester United FC,Newcastle United FC,1,0
+27/12/2025 12:30,Nottingham Forest FC,Manchester City FC,1,2
+27/12/2025 15:00,Arsenal FC,Brighton & Hove Albion FC,2,1
+27/12/2025 15:00,Brentford FC,AFC Bournemouth,4,1
+27/12/2025 15:00,Burnley FC,Everton FC,0,0
+27/12/2025 15:00,Liverpool FC,Wolverhampton Wanderers FC,2,1
+27/12/2025 15:00,West Ham United FC,Fulham FC,0,1
+27/12/2025 17:30,Chelsea FC,Aston Villa FC,1,2
+28/12/2025 14:00,Sunderland AFC,Leeds United FC,1,1
+28/12/2025 16:30,Crystal Palace FC,Tottenham Hotspur FC,0,1
+30/12/2025 19:30,Burnley FC,Newcastle United FC,1,3
+30/12/2025 19:30,Chelsea FC,AFC Bournemouth,2,2
+30/12/2025 19:30,Nottingham Forest FC,Everton FC,0,2
+30/12/2025 19:30,West Ham United FC,Brighton & Hove Albion FC,2,2
+30/12/2025 20:15,Arsenal FC,Aston Villa FC,4,1
+30/12/2025 20:15,Manchester United FC,Wolverhampton Wanderers FC,1,1
+01/01/2026 17:30,Crystal Palace FC,Fulham FC,1,1
+01/01/2026 17:30,Liverpool FC,Leeds United FC,0,0
+01/01/2026 20:00,Sunderland AFC,Manchester City FC,0,0
+01/01/2026 20:00,Brentford FC,Tottenham Hotspur FC,0,0
+03/01/2026 12:30,Aston Villa FC,Nottingham Forest FC,3,1
+03/01/2026 15:00,Brighton & Hove Albion FC,Burnley FC,2,0
+03/01/2026 15:00,Wolverhampton Wanderers FC,West Ham United FC,3,0
+03/01/2026 17:30,AFC Bournemouth,Arsenal FC,2,3
+04/01/2026 12:30,Leeds United FC,Manchester United FC,1,1
+04/01/2026 15:00,Everton FC,Brentford FC,2,4
+04/01/2026 15:00,Newcastle United FC,Crystal Palace FC,2,0
+04/01/2026 15:00,Tottenham Hotspur FC,Sunderland AFC,1,1
+04/01/2026 15:15,Fulham FC,Liverpool FC,2,2
+04/01/2026 17:30,Manchester City FC,Chelsea FC,1,1
+06/01/2026 20:00,West Ham United FC,Nottingham Forest FC,1,2
+07/01/2026 19:30,AFC Bournemouth,Tottenham Hotspur FC,3,2
+07/01/2026 19:30,Crystal Palace FC,Aston Villa FC,0,0
+07/01/2026 19:30,Brentford FC,Sunderland AFC,3,0
+07/01/2026 19:30,Everton FC,Wolverhampton Wanderers FC,1,1
+07/01/2026 19:30,Fulham FC,Chelsea FC,2,1
+07/01/2026 19:30,Manchester City FC,Brighton & Hove Albion FC,1,1
+07/01/2026 20:15,Burnley FC,Manchester United FC,2,2
+07/01/2026 20:15,Newcastle United FC,Leeds United FC,4,3
+08/01/2026 20:00,Arsenal FC,Liverpool FC,0,0
+17/01/2026 12:30,Manchester United FC,Manchester City FC,2,0
+17/01/2026 15:00,Sunderland AFC,Crystal Palace FC,2,1
+17/01/2026 15:00,Chelsea FC,Brentford FC,2,0
+17/01/2026 15:00,Liverpool FC,Burnley FC,1,1
+17/01/2026 15:00,Leeds United FC,Fulham FC,1,0
+17/01/2026 15:00,Tottenham Hotspur FC,West Ham United FC,1,2
+17/01/2026 17:30,Nottingham Forest FC,Arsenal FC,0,0
+18/01/2026 14:00,Wolverhampton Wanderers FC,Newcastle United FC,0,0
+18/01/2026 16:30,Aston Villa FC,Everton FC,0,1
+19/01/2026 20:00,Brighton & Hove Albion FC,AFC Bournemouth,1,1
+24/01/2026 12:30,West Ham United FC,Sunderland AFC,3,1
+24/01/2026 15:00,Burnley FC,Tottenham Hotspur FC,2,2
+24/01/2026 15:00,Fulham FC,Brighton & Hove Albion FC,2,1
+24/01/2026 15:00,Manchester City FC,Wolverhampton Wanderers FC,2,0
+24/01/2026 17:30,AFC Bournemouth,Liverpool FC,3,2
+25/01/2026 14:00,Crystal Palace FC,Chelsea FC,1,3
+25/01/2026 14:00,Brentford FC,Nottingham Forest FC,0,2
+25/01/2026 14:00,Newcastle United FC,Aston Villa FC,0,2
+25/01/2026 16:30,Arsenal FC,Manchester United FC,2,3
+26/01/2026 20:00,Everton FC,Leeds United FC,1,1
+31/01/2026 15:00,Brighton & Hove Albion FC,Everton FC,1,1
+31/01/2026 15:00,Leeds United FC,Arsenal FC,0,4
+31/01/2026 15:00,Wolverhampton Wanderers FC,AFC Bournemouth,0,2
+31/01/2026 17:30,Chelsea FC,West Ham United FC,3,2
+31/01/2026 20:00,Liverpool FC,Newcastle United FC,4,1
+01/02/2026 14:00,Aston Villa FC,Brentford FC,0,1
+01/02/2026 14:00,Manchester United FC,Fulham FC,3,2
+01/02/2026 14:00,Nottingham Forest FC,Crystal Palace FC,1,1
+01/02/2026 16:30,Tottenham Hotspur FC,Manchester City FC,2,2
+02/02/2026 20:00,Sunderland AFC,Burnley FC,3,0
+06/02/2026 20:00,Leeds United FC,Nottingham Forest FC,3,1
+07/02/2026 12:30,Manchester United FC,Tottenham Hotspur FC,2,0
+07/02/2026 15:00,AFC Bournemouth,Aston Villa FC,1,1
+07/02/2026 15:00,Arsenal FC,Sunderland AFC,3,0
+07/02/2026 15:00,Burnley FC,West Ham United FC,0,2
+07/02/2026 15:00,Fulham FC,Everton FC,1,2
+07/02/2026 15:00,Wolverhampton Wanderers FC,Chelsea FC,1,3
+07/02/2026 17:30,Newcastle United FC,Brentford FC,2,3
+08/02/2026 14:00,Brighton & Hove Albion FC,Crystal Palace FC,0,1
+08/02/2026 16:30,Liverpool FC,Manchester City FC,1,2
+10/02/2026 19:30,Chelsea FC,Leeds United FC,2,2
+10/02/2026 19:30,Everton FC,AFC Bournemouth,1,2
+10/02/2026 19:30,Tottenham Hotspur FC,Newcastle United FC,1,2
+10/02/2026 20:15,West Ham United FC,Manchester United FC,1,1
+11/02/2026 19:30,Aston Villa FC,Brighton & Hove Albion FC,1,0
+11/02/2026 19:30,Manchester City FC,Fulham FC,3,0
+11/02/2026 19:30,Nottingham Forest FC,Wolverhampton Wanderers FC,0,0
+11/02/2026 19:40,Crystal Palace FC,Burnley FC,2,3
+11/02/2026 20:15,Sunderland AFC,Liverpool FC,0,1
+12/02/2026 20:00,Brentford FC,Arsenal FC,1,1

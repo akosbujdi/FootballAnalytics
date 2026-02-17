@@ -12,7 +12,7 @@ LAST_UPDATE_FILE = "data/last_update.txt"
 
 API_URL = "https://api.football-data.org/v4/competitions/PL/matches"
 
-
+# read in last update from .txt file
 def read_last_update():
     if not os.path.exists(LAST_UPDATE_FILE):
         return datetime(2000, 1, 1, tzinfo=timezone.utc)
@@ -26,11 +26,13 @@ def read_last_update():
         return datetime(2000, 1, 1, tzinfo=timezone.utc)
 
 
+# write new last_update to .txt file (last_update.txt)
 def save_last_update():
     with open(LAST_UPDATE_FILE, "w") as f:
         f.write(datetime.now(timezone.utc).isoformat())
 
 
+# return latest past fixtures
 def get_api_matches(api_key):
     headers = {"X-Auth-Token": api_key}
     response = requests.get(API_URL, headers=headers)
@@ -41,6 +43,7 @@ def get_api_matches(api_key):
     return response.json().get("matches", [])
 
 
+# ensure correct naming
 def convert_to_csv_format(match):
     date = pd.to_datetime(match["utcDate"])
 
@@ -53,6 +56,7 @@ def convert_to_csv_format(match):
     return (date_str, home, away, hg, ag)
 
 
+# main logic: get fixtures from last update until current and update dataset
 def append_new_matches(api_key):
     print("Checking for new Premier League results...")
 
@@ -61,7 +65,6 @@ def append_new_matches(api_key):
 
     matches = get_api_matches(api_key)
 
-    # Load historical CSV to avoid duplicates
     if os.path.exists(HISTORICAL_CSV):
         df_hist = pd.read_csv(HISTORICAL_CSV)
     else:
@@ -73,17 +76,13 @@ def append_new_matches(api_key):
         if match["status"] != "FINISHED":
             continue
 
-        # Parse date as timezone-aware UTC
         match_date = pd.to_datetime(match["utcDate"], utc=True)
 
-        # Skip if before last update
         if match_date <= last_update:
             continue
 
-        # Convert to CSV format
         row = convert_to_csv_format(match)
 
-        # Skip if match already exists in historical CSV (home + away + date)
         if not df_hist[
             (df_hist['homeTeam'] == row[1]) &
             (df_hist['awayTeam'] == row[2]) &
@@ -98,21 +97,15 @@ def append_new_matches(api_key):
         return
 
     df_new = pd.DataFrame(new_rows, columns=["date", "homeTeam", "awayTeam", "homeGoals", "awayGoals"])
-
-    # Append to CSV
     df_new.to_csv(HISTORICAL_CSV, mode="a", header=False, index=False)
-
     print(f"Added {len(df_new)} new matches to {HISTORICAL_CSV}")
 
-    # Update timestamp
     save_last_update()
     print("Updated last update timestamp.")
 
 
 if __name__ == "__main__":
-    # Example manual run
     from dotenv import load_dotenv
-
     load_dotenv()
 
     api_key = os.getenv("FOOTBALL_API_KEY")
