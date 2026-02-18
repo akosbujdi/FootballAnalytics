@@ -1,11 +1,14 @@
 import json
 import os
 import requests
+import pandas as pd
 from datetime import datetime, timezone
-from stats_model import simulate_match
+from simulate import simulate_match
 from utils.prediction_storage import save_prediction
 from utils.data_updater import append_new_matches
 from utils.name_mapping import normalize_team_name
+
+df = pd.read_csv("data/historical_matches.csv")
 
 # load api key from .env
 from dotenv import load_dotenv
@@ -125,7 +128,7 @@ def prediction_menu(home_team, away_team, fixture_date):
     while True:
         print("Predict the scoreline using:")
         print("1. Statistical (Poisson)")
-        print("2. AI (coming soon...)")
+        print("2. AI (Random Forest)")
 
         try:
             choice = int(input("\nSelect an option: "))
@@ -133,35 +136,73 @@ def prediction_menu(home_team, away_team, fixture_date):
             print("\nPlease enter a valid number.\n")
             continue
 
+        # poisson
         if choice == 1:
-            if choice == 1:
-                print("\nRunning Poisson simulation...\n")
-                result = simulate_match(
-                    model_name="poisson",
-                    home_team=home_team,
-                    away_team=away_team,
-                    n_simulations=1000
-                )
+            print("\nRunning Poisson simulation...\n")
 
-                print(
-                    f"Most likely scoreline:\n{home_team} {result["top_score"]} {away_team}\nProbability: {result["top_score_percentage"]:.2%}\n")
+            result = simulate_match(
+                model_name="poisson",
+                home_team=home_team,
+                away_team=away_team,
+                df=df,
+                n_simulations=1000
+            )
 
-                probs = result["probabilities"]
-                print(f"{home_team} win probability: {probs['home_win']:.2%}")
-                print(f"Draw probability: {probs['draw']:.2%}")
-                print(f"{away_team} win probability:  {probs['away_win']:.2%}\n")
+            print(
+                f"Most likely scoreline:\n"
+                f"{home_team} {result['top_score']} {away_team}\n"
+                f"Probability: {result['top_score_percentage']:.2%}\n"
+            )
 
-                save_prediction(
-                    model_name=result["model_used"],
-                    home_team=home_team,
-                    away_team=away_team,
-                    top_score=result["top_score"],
-                    fixture_date=fixture_date
-                )
+            probs = result["probabilities"]
 
-                break
+            print(f"{home_team} win probability: {probs['home_win']:.2%}")
+            print(f"Draw probability: {probs['draw']:.2%}")
+            print(f"{away_team} win probability: {probs['away_win']:.2%}\n")
+
+            save_prediction(
+                model_name=result["model_used"],
+                home_team=home_team,
+                away_team=away_team,
+                top_score=result["top_score"],
+                fixture_date=fixture_date
+            )
+
+            break
+
+        # random forest
         elif choice == 2:
-            print("\nAI method not implemented yet. Please choose another option.\n")
+            print("\nRunning Random Forest AI simulation...\n")
+
+            result = simulate_match(
+                model_name="random_forest",
+                home_team=home_team,
+                away_team=away_team,
+                df=df,
+                n_simulations=20
+            )
+
+            print(
+                f"Predicted outcome probabilities:\n"
+            )
+
+            probs = result["probabilities"]
+
+            print(f"{home_team} win probability: {probs['home_win']:.2%}")
+            print(f"Draw probability: {probs['draw']:.2%}")
+            print(f"{away_team} win probability: {probs['away_win']:.2%}\n")
+
+            save_prediction(
+                model_name=result["model_used"],
+                home_team=home_team,
+                away_team=away_team,
+                top_score=result["top_score"],
+                fixture_date=fixture_date
+
+            )
+
+            break
+
         else:
             print(f"\nInvalid choice. Enter 1 or 2.\n")
 

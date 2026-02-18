@@ -1,50 +1,10 @@
 [
     {
-        "model": "poisson",
-        "prediction_date": "2025-12-11T12:28:27.078677",
-        "fixture_date": "2025-12-13T17:30:00Z",
-        "home_team": "Burnley FC",
-        "away_team": "Fulham FC",
-        "predicted_score": "1-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2025-12-11T12:28:55.641910",
-        "fixture_date": "2025-12-13T15:00:00Z",
-        "home_team": "Liverpool FC",
-        "away_team": "Brighton & Hove Albion FC",
-        "predicted_score": "2-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2025-12-11T13:08:41.098273",
-        "fixture_date": "2025-12-13T15:00:00Z",
-        "home_team": "Liverpool FC",
-        "away_team": "Brighton & Hove Albion FC",
-        "predicted_score": "2-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2026-02-17T15:42:06.036294",
-        "fixture_date": "2026-02-18T20:00:00Z",
-        "home_team": "Wolverhampton Wanderers FC",
-        "away_team": "Arsenal FC",
-        "predicted_score": "1-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2026-02-17T15:42:15.540541",
-        "fixture_date": "2026-02-18T20:00:00Z",
-        "home_team": "Wolverhampton Wanderers FC",
-        "away_team": "Arsenal FC",
-        "predicted_score": "0-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2026-02-17T15:42:31.274867",
+        "model": "random_forest",
+        "prediction_date": "2026-02-18T14:13:22.452604",
         "fixture_date": "2026-02-22T14:00:00Z",
         "home_team": "Nottingham Forest FC",
         "away_team": "Liverpool FC",
-        "predicted_score": "1-1"
+        "predicted_score": "0-3"
     }
 ]

@@ -9,7 +9,7 @@ PRED_FILE = "data/predictions.json"
 def save_prediction(model_name, home_team, away_team, top_score, fixture_date):
     os.makedirs("data", exist_ok=True)
 
-    # Load existing predictions
+    # load existing predictions
     if os.path.exists(PRED_FILE):
         with open(PRED_FILE, "r") as f:
             try:
