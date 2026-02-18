@@ -7,9 +7,6 @@ HOME_MODEL = None
 AWAY_MODEL = None
 
 def build_features(df):
-    """
-    Adds rolling averages and season averages for home and away teams
-    """
     df = df.sort_values("date")
 
     # Short-term form (last 5 matches)
