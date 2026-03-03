@@ -145,7 +145,7 @@ def prediction_menu(home_team, away_team, fixture_date):
                 home_team=home_team,
                 away_team=away_team,
                 df=df,
-                n_simulations=1000
+                n_simulations=10000
             )
 
             print(

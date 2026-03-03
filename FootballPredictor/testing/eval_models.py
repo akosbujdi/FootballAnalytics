@@ -8,11 +8,11 @@ sys.path.append(project_root)
 from simulate import simulate_match
 
 DATA_PATH = "../data/historical_matches.csv"
-TEST_PERIOD_DAYS = 90  # games of last 3 months
+TEST_PERIOD_DAYS = 90 # edit to change split
 
 # MonteCarlo settings
 N_POISSON = 100
-N_RF = 10  # RandomForest much slower, hence fewer simulation
+N_RF = 20  # RandomForest much slower, hence fewer simulation
 
 # load dataset
 df = pd.read_csv(DATA_PATH)
@@ -87,11 +87,11 @@ def evaluate_model(model_name, n_simulations):
 print("Evaluating Poisson...")
 poisson_results = evaluate_model("poisson", n_simulations=N_POISSON)
 
-print("Evaluating Random Forest...")
-rf_results = evaluate_model("random_forest", n_simulations=N_RF)
+# print("Evaluating Random Forest...")
+# rf_results = evaluate_model("random_forest", n_simulations=N_RF)
 
-# print out summary
-for res in [poisson_results, rf_results]:
+# print out summary (add rf_results)
+for res in [poisson_results]:
     print(f"\nModel: {res['model']}")
     print(f"Matches evaluated: {res['matches']}")
     print(f"Outcome accuracy: {res['outcome_accuracy']:.2%}")

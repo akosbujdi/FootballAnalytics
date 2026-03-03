@@ -6,5 +6,101 @@
         "home_team": "Nottingham Forest FC",
         "away_team": "Liverpool FC",
         "predicted_score": "0-3"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:15:24.179299",
+        "fixture_date": "2026-03-03T20:15:00Z",
+        "home_team": "Wolverhampton Wanderers FC",
+        "away_team": "Liverpool FC",
+        "predicted_score": "0-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:15:41.018208",
+        "fixture_date": "2026-03-04T19:30:00Z",
+        "home_team": "Brighton & Hove Albion FC",
+        "away_team": "Arsenal FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:15:52.527859",
+        "fixture_date": "2026-03-03T19:30:00Z",
+        "home_team": "Everton FC",
+        "away_team": "Burnley FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:16:07.044382",
+        "fixture_date": "2026-03-03T19:30:00Z",
+        "home_team": "AFC Bournemouth",
+        "away_team": "Brentford FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:16:28.406813",
+        "fixture_date": "2026-03-05T20:00:00Z",
+        "home_team": "Tottenham Hotspur FC",
+        "away_team": "Crystal Palace FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:16:42.165645",
+        "fixture_date": "2026-03-04T19:30:00Z",
+        "home_team": "Fulham FC",
+        "away_team": "West Ham United FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:25:02.288867",
+        "fixture_date": "2026-03-04T19:30:00Z",
+        "home_team": "Fulham FC",
+        "away_team": "West Ham United FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:25:23.948700",
+        "fixture_date": "2026-03-04T19:30:00Z",
+        "home_team": "Fulham FC",
+        "away_team": "West Ham United FC",
+        "predicted_score": "2-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:25:49.293672",
+        "fixture_date": "2026-03-04T19:30:00Z",
+        "home_team": "Manchester City FC",
+        "away_team": "Nottingham Forest FC",
+        "predicted_score": "2-0"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:26:09.453732",
+        "fixture_date": "2026-03-04T19:30:00Z",
+        "home_team": "Manchester City FC",
+        "away_team": "Nottingham Forest FC",
+        "predicted_score": "2-0"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:26:38.522659",
+        "fixture_date": "2026-03-03T19:30:00Z",
+        "home_team": "Leeds United FC",
+        "away_team": "Sunderland AFC",
+        "predicted_score": "1-0"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-03T10:27:04.593172",
+        "fixture_date": "2026-03-03T19:30:00Z",
+        "home_team": "Leeds United FC",
+        "away_team": "Sunderland AFC",
+        "predicted_score": "1-1"
     }
 ]

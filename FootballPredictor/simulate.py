@@ -6,7 +6,7 @@ PREDICTION_MODELS = {
 }
 
 
-def simulate_match(model_name, home_team, away_team, df, n_simulations=1000):
+def simulate_match(model_name, home_team, away_team, df, n_simulations=10000):
     if model_name not in PREDICTION_MODELS:
         raise ValueError(f"Unknown model: {model_name}")
 
@@ -33,6 +33,10 @@ def simulate_match(model_name, home_team, away_team, df, n_simulations=1000):
     top_score = max(score_counts, key=score_counts.get)
     top_percentage = score_counts[top_score] / n_simulations
 
+    sorted_scores = dict(
+        sorted(score_counts.items(), key=lambda x: x[1], reverse=True)
+    )
+
     return {
         "model_used": model_name,
         "probabilities": {
@@ -40,7 +44,7 @@ def simulate_match(model_name, home_team, away_team, df, n_simulations=1000):
             "draw": draws / n_simulations,
             "away_win": away_wins / n_simulations,
         },
-        "score_distribution": score_counts,
+        "score_distribution": sorted_scores,
         "top_score": top_score,
         "top_score_percentage": top_percentage
     }
