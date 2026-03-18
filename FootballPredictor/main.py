@@ -209,8 +209,8 @@ def prediction_menu(home_team, away_team, fixture_date):
 
 # main method
 def main():
-    clear_outdated_cache()
-    append_new_matches(API_KEY)
+    # clear_outdated_cache()
+    # append_new_matches(API_KEY)
 
     teams = load_teams()
     team_id, team_name = display_team_menu(teams)

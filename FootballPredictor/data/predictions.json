@@ -102,5 +102,13 @@
         "home_team": "Leeds United FC",
         "away_team": "Sunderland AFC",
         "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-03-18T23:21:18.055664",
+        "fixture_date": "2026-03-20T20:00:00Z",
+        "home_team": "AFC Bournemouth",
+        "away_team": "Manchester United FC",
+        "predicted_score": "1-1"
     }
 ]
