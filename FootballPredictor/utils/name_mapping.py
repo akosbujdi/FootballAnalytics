@@ -12,6 +12,7 @@ TEAM_NAME_MAP = {
     "Brentford FC": "Brentford FC",
 
     "Brighton": "Brighton & Hove Albion FC",
+    "Brighton & Hove Albion": "Brighton & Hove Albion FC",
     "Brighton & Hove Albion FC": "Brighton & Hove Albion FC",
 
     "Chelsea": "Chelsea FC",
