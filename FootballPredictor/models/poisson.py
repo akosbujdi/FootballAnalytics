@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 
-# Toggle for RECENCY_BIAS on or off
+# Recency_BIAS = True uses recency bias in logic else not
 RECENCY_BIAS = True
 
 # Tunable parameters
-HALF_LIFE_DAYS = 60          # weight halves every N days
+HALF_LIFE_DAYS = 20          # weight halves every N days
 MIN_MATCHES_CONFIDENCE = 5   # below this, blend with league average
-PROMOTED_BLEND = 0.25        # data trust weight for promoted/new teams
+PROMOTED_BLEND = 0.25         # data trust weight for promoted/new teams
 
 
 def _recency_weights(dates: pd.Series, half_life_days: int = HALF_LIFE_DAYS) -> np.ndarray:

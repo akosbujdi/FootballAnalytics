@@ -2,11 +2,31 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+from scipy.stats import poisson as _spois
 
 project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
 sys.path.append(project_root)
 
 from models import poisson, random_forest
+
+MAX_GOALS = 8  # upper bound for score matrix
+
+
+def _most_likely(lh, la):
+    # Return (pred_home, pred_away, outcome) using Poisson probability matrix.
+    g = np.arange(MAX_GOALS + 1)
+    mat = np.outer(_spois.pmf(g, lh), _spois.pmf(g, la))  # mat[h, a] = P(h, a)
+
+    h_idx, a_idx = np.unravel_index(mat.argmax(), mat.shape)
+
+    home_p = np.tril(mat, k=-1).sum()   # P(home goals > away goals)
+    draw_p = np.trace(mat)
+    away_p = np.triu(mat, k=1).sum()
+
+    outcome = "H" if home_p >= draw_p and home_p >= away_p else \
+              ("D" if draw_p >= away_p else "A")
+
+    return int(h_idx), int(a_idx), outcome
 
 DATA_PATH = "../data/historical_matches.csv"
 
@@ -32,14 +52,14 @@ def _eval_poisson(df_train, df_test):
         lh = float(np.clip(league_avg_home * hs["att"] * as_["def"] * home_adv, 0.3, 6.0))
         la = float(np.clip(league_avg_away * as_["att"] * hs["def"], 0.3, 6.0))
 
-        pred_h, pred_a = round(lh), round(la)
+        pred_h, pred_a, pred_out = _most_likely(lh, la)
         act_h,  act_a  = int(match["homeGoals"]), int(match["awayGoals"])
 
         rows.append({
             "home": match["homeTeam"], "away": match["awayTeam"],
             "actual": f"{act_h}-{act_a}", "predicted": f"{pred_h}-{pred_a}",
             "exact":   pred_h == act_h and pred_a == act_a,
-            "outcome": _outcome(pred_h, pred_a) == _outcome(act_h, act_a),
+            "outcome": pred_out == _outcome(act_h, act_a),
             "home_ae": abs(pred_h - act_h),
             "away_ae": abs(pred_a - act_a),
         })
@@ -73,14 +93,14 @@ def _eval_rf(df_train, df_test):
         exp_h = float(np.clip(home_model.predict(feat_row)[0], 0.1, 3.5))
         exp_a = float(np.clip(away_model.predict(feat_row)[0], 0.1, 3.5))
 
-        pred_h, pred_a = round(exp_h), round(exp_a)
+        pred_h, pred_a, pred_out = _most_likely(exp_h, exp_a)
         act_h,  act_a  = int(match["homeGoals"]), int(match["awayGoals"])
 
         rows.append({
             "home": match["homeTeam"], "away": match["awayTeam"],
             "actual": f"{act_h}-{act_a}", "predicted": f"{pred_h}-{pred_a}",
             "exact":   pred_h == act_h and pred_a == act_a,
-            "outcome": _outcome(pred_h, pred_a) == _outcome(act_h, act_a),
+            "outcome": pred_out == _outcome(act_h, act_a),
             "home_ae": abs(pred_h - act_h),
             "away_ae": abs(pred_a - act_a),
         })

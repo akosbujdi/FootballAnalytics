@@ -3,9 +3,12 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
 # Tunable parameters
-N_ESTIMATORS = 300
-SHORT_WINDOW = 5
+N_ESTIMATORS = 120
+SHORT_WINDOW = 3
 LONG_WINDOW = 15
+MAX_DEPTH = 10
+MIN_SAMPLES_LEAF = 3
+MAX_FEATURES = "sqrt"
 
 STAT_COLS = [
     'homeGoals', 'awayGoals',
@@ -17,8 +20,10 @@ STAT_COLS = [
 FEATURES = [
     'h5_scored',  'h5_conceded',  'h5_shots',  'h5_sot',  'h5_poss',
     'h15_scored', 'h15_conceded', 'h15_shots', 'h15_sot', 'h15_poss',
+    'h_season_scored', 'h_season_conceded',
     'a5_scored',  'a5_conceded',  'a5_shots',  'a5_sot',  'a5_poss',
     'a15_scored', 'a15_conceded', 'a15_shots', 'a15_sot', 'a15_poss',
+    'a_season_scored', 'a_season_conceded',
 ]
 
 _cache = {}
@@ -49,6 +54,16 @@ def build_features(df):
         df[f'a5_{name}']  = df.groupby('awayTeam')[col].transform(lambda x: _rolling_mean(x, SHORT_WINDOW))
         df[f'a15_{name}'] = df.groupby('awayTeam')[col].transform(lambda x: _rolling_mean(x, LONG_WINDOW))
 
+    # Season cumulative average — stable team strength baseline (no leakage via shift)
+    df['h_season_scored']   = df.groupby('homeTeam')['homeGoals'].transform(
+        lambda x: x.shift().expanding(min_periods=1).mean())
+    df['h_season_conceded'] = df.groupby('homeTeam')['awayGoals'].transform(
+        lambda x: x.shift().expanding(min_periods=1).mean())
+    df['a_season_scored']   = df.groupby('awayTeam')['awayGoals'].transform(
+        lambda x: x.shift().expanding(min_periods=1).mean())
+    df['a_season_conceded'] = df.groupby('awayTeam')['homeGoals'].transform(
+        lambda x: x.shift().expanding(min_periods=1).mean())
+
     return df
 
 
@@ -59,8 +74,12 @@ def _train(df):
     y_home = df['homeGoals']
     y_away = df['awayGoals']
 
-    home_model = RandomForestRegressor(n_estimators=N_ESTIMATORS, random_state=42)
-    away_model = RandomForestRegressor(n_estimators=N_ESTIMATORS, random_state=42)
+    home_model = RandomForestRegressor(
+        n_estimators=N_ESTIMATORS, max_depth=MAX_DEPTH,
+        min_samples_leaf=MIN_SAMPLES_LEAF, max_features=MAX_FEATURES, random_state=42)
+    away_model = RandomForestRegressor(
+        n_estimators=N_ESTIMATORS, max_depth=MAX_DEPTH,
+        min_samples_leaf=MIN_SAMPLES_LEAF, max_features=MAX_FEATURES, random_state=42)
     home_model.fit(X, y_home)
     away_model.fit(X, y_away)
     return home_model, away_model, col_means
@@ -85,10 +104,8 @@ def predict(home_team, away_team, df):
     else:
         h = latest_home.iloc[-1]
         a = latest_away.iloc[-1]
-        home_feats = ['h5_scored', 'h5_conceded', 'h5_shots', 'h5_sot', 'h5_poss',
-                      'h15_scored', 'h15_conceded', 'h15_shots', 'h15_sot', 'h15_poss']
-        away_feats = ['a5_scored', 'a5_conceded', 'a5_shots', 'a5_sot', 'a5_poss',
-                      'a15_scored', 'a15_conceded', 'a15_shots', 'a15_sot', 'a15_poss']
+        home_feats = [f for f in FEATURES if f.startswith("h")]
+        away_feats = [f for f in FEATURES if f.startswith("a")]
         row = pd.DataFrame([{**h[home_feats].to_dict(), **a[away_feats].to_dict()}])
 
     row = row[FEATURES].fillna(col_means).fillna(0)
