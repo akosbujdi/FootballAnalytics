@@ -1109,36 +1109,36 @@ date,homeTeam,awayTeam,homeGoals,awayGoals,homePossession,awayPossession,homeSho
 04/05/2025 14:00,Brentford FC,Manchester United FC,4,3,47.0,53.0,12.0,14.0,6.0,5.0
 04/05/2025 16:30,Chelsea FC,Liverpool FC,3,1,36.0,64.0,17.0,11.0,7.0,2.0
 05/05/2025 20:00,Crystal Palace FC,Nottingham Forest FC,1,1,50.0,50.0,20.0,12.0,3.0,4.0
-10/05/2025 15:00,Fulham FC,Everton FC,1,3,,,,,,
-10/05/2025 15:00,Ipswich,Brentford FC,0,1,,,,,,
-10/05/2025 15:00,Southampton FC,Manchester City FC,0,0,,,,,,
-10/05/2025 15:00,Wolverhampton Wanderers FC,Brighton & Hove Albion FC,0,2,,,,,,
-10/05/2025 17:30,AFC Bournemouth,Aston Villa FC,0,1,,,,,,
-11/05/2025 12:00,Newcastle United FC,Chelsea FC,2,0,,,,,,
-11/05/2025 14:15,Manchester United FC,West Ham United FC,0,2,,,,,,
-11/05/2025 14:15,Nottingham Forest FC,Leicester,2,2,,,,,,
-11/05/2025 14:15,Tottenham Hotspur FC,Crystal Palace FC,0,2,,,,,,
-11/05/2025 16:30,Liverpool FC,Arsenal FC,2,2,,,,,,
-16/05/2025 19:30,Aston Villa FC,Tottenham Hotspur FC,2,0,,,,,,
-16/05/2025 20:15,Chelsea FC,Manchester United FC,1,0,,,,,,
-18/05/2025 12:00,Everton FC,Southampton FC,2,0,,,,,,
-18/05/2025 14:15,West Ham United FC,Nottingham Forest FC,1,2,,,,,,
-18/05/2025 15:00,Leicester,Ipswich,2,0,,,,,,
-18/05/2025 15:00,Brentford FC,Fulham FC,2,3,,,,,,
-18/05/2025 16:30,Arsenal FC,Newcastle United FC,1,0,,,,,,
-19/05/2025 20:00,Brighton & Hove Albion FC,Liverpool FC,3,2,,,,,,
-20/05/2025 20:00,Crystal Palace FC,Wolverhampton Wanderers FC,4,2,,,,,,
-20/05/2025 20:00,Manchester City FC,AFC Bournemouth,3,1,,,,,,
-25/05/2025 16:00,Nottingham Forest FC,Chelsea FC,0,1,,,,,,
-25/05/2025 16:00,Wolverhampton Wanderers FC,Brentford FC,1,1,,,,,,
-25/05/2025 16:00,Tottenham Hotspur FC,Brighton & Hove Albion FC,1,4,,,,,,
-25/05/2025 16:00,Southampton FC,Arsenal FC,1,2,,,,,,
-25/05/2025 16:00,Newcastle United FC,Everton FC,0,1,,,,,,
-25/05/2025 16:00,Liverpool FC,Crystal Palace FC,1,1,,,,,,
-25/05/2025 16:00,Ipswich,West Ham United FC,1,3,,,,,,
-25/05/2025 16:00,Fulham FC,Manchester City FC,0,2,,,,,,
-25/05/2025 16:00,AFC Bournemouth,Leicester,2,0,,,,,,
-25/05/2025 16:00,Manchester United FC,Aston Villa FC,2,0,,,,,,
+10/05/2025 15:00,Fulham FC,Everton FC,1,3,64.0,36.0,18.0,11.0,6.0,7.0
+10/05/2025 15:00,Ipswich,Brentford FC,0,1,49.0,51.0,11.0,15.0,4.0,5.0
+10/05/2025 15:00,Southampton FC,Manchester City FC,0,0,28.0,72.0,2.0,26.0,0.0,4.0
+10/05/2025 15:00,Wolverhampton Wanderers FC,Brighton & Hove Albion FC,0,2,56.0,44.0,10.0,6.0,3.0,1.0
+10/05/2025 17:30,AFC Bournemouth,Aston Villa FC,0,1,66.0,34.0,10.0,6.0,4.0,3.0
+11/05/2025 12:00,Newcastle United FC,Chelsea FC,2,0,45.0,55.0,15.0,10.0,6.0,3.0
+11/05/2025 14:15,Manchester United FC,West Ham United FC,0,2,52.0,48.0,20.0,9.0,5.0,4.0
+11/05/2025 14:15,Nottingham Forest FC,Leicester,2,2,55.0,45.0,15.0,10.0,4.0,6.0
+11/05/2025 14:15,Tottenham Hotspur FC,Crystal Palace FC,0,2,48.0,52.0,8.0,23.0,1.0,9.0
+11/05/2025 16:30,Liverpool FC,Arsenal FC,2,2,45.0,55.0,14.0,15.0,5.0,6.0
+16/05/2025 19:30,Aston Villa FC,Tottenham Hotspur FC,2,0,67.0,33.0,18.0,3.0,7.0,1.0
+16/05/2025 20:15,Chelsea FC,Manchester United FC,1,0,47.0,53.0,11.0,4.0,3.0,1.0
+18/05/2025 12:00,Everton FC,Southampton FC,2,0,50.0,50.0,13.0,6.0,4.0,2.0
+18/05/2025 14:15,West Ham United FC,Nottingham Forest FC,1,2,60.0,40.0,16.0,10.0,5.0,5.0
+18/05/2025 15:00,Leicester,Ipswich,2,0,50.0,50.0,9.0,20.0,3.0,2.0
+18/05/2025 15:00,Brentford FC,Fulham FC,2,3,51.0,49.0,10.0,16.0,4.0,7.0
+18/05/2025 16:30,Arsenal FC,Newcastle United FC,1,0,51.0,49.0,12.0,14.0,4.0,5.0
+19/05/2025 20:00,Brighton & Hove Albion FC,Liverpool FC,3,2,49.0,51.0,25.0,18.0,12.0,5.0
+20/05/2025 20:00,Crystal Palace FC,Wolverhampton Wanderers FC,4,2,31.0,69.0,14.0,12.0,10.0,3.0
+20/05/2025 20:00,Manchester City FC,AFC Bournemouth,3,1,57.0,43.0,12.0,8.0,5.0,2.0
+25/05/2025 16:00,Nottingham Forest FC,Chelsea FC,0,1,52.0,48.0,10.0,6.0,2.0,2.0
+25/05/2025 16:00,Wolverhampton Wanderers FC,Brentford FC,1,1,49.0,51.0,18.0,13.0,6.0,7.0
+25/05/2025 16:00,Tottenham Hotspur FC,Brighton & Hove Albion FC,1,4,34.0,66.0,3.0,22.0,1.0,7.0
+25/05/2025 16:00,Southampton FC,Arsenal FC,1,2,38.0,62.0,7.0,23.0,2.0,7.0
+25/05/2025 16:00,Newcastle United FC,Everton FC,0,1,65.0,35.0,17.0,14.0,6.0,6.0
+25/05/2025 16:00,Liverpool FC,Crystal Palace FC,1,1,69.0,31.0,14.0,8.0,3.0,5.0
+25/05/2025 16:00,Ipswich,West Ham United FC,1,3,42.0,58.0,14.0,10.0,4.0,6.0
+25/05/2025 16:00,Fulham FC,Manchester City FC,0,2,47.0,53.0,13.0,19.0,3.0,4.0
+25/05/2025 16:00,AFC Bournemouth,Leicester,2,0,63.0,37.0,20.0,3.0,7.0,0.0
+25/05/2025 16:00,Manchester United FC,Aston Villa FC,2,0,67.0,33.0,25.0,6.0,9.0,1.0
 15/08/2025 20:00,Liverpool FC,AFC Bournemouth,4,2,61.0,39.0,19.0,10.0,10.0,3.0
 16/08/2025 12:30,Aston Villa FC,Newcastle United FC,0,0,40.0,60.0,3.0,16.0,3.0,3.0
 16/08/2025 15:00,Brighton & Hove Albion FC,Fulham FC,1,1,50.0,50.0,10.0,7.0,4.0,2.0
