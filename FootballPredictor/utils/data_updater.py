@@ -9,9 +9,9 @@ from utils.name_mapping import normalize_team_name
 
 load_dotenv()
 
-HISTORICAL_CSV  = "data/historical_matches.csv"
+HISTORICAL_CSV = "data/historical_matches.csv"
 LAST_UPDATE_FILE = "data/last_update.txt"
-LAST_GW_FILE    = "data/last_gw.txt"
+LAST_GW_FILE = "data/last_gw.txt"
 
 GITHUB_BASE = (
     "https://raw.githubusercontent.com/olbauday/FPL-Core-Insights/main"
@@ -102,34 +102,30 @@ def _as_stat(val):
 
 
 def _convert_fixture(row, team_map):
-    """Convert a fixtures.csv row into a CSV row dict."""
+    # Convert a fixtures.csv row into a CSV row dict.
     dt = datetime.strptime(row["kickoff_time"], "%Y-%m-%dT%H:%M:%S")
 
     home_id = int(float(row["home_team"]))
     away_id = int(float(row["away_team"]))
 
     return {
-        "date":               dt.strftime("%d/%m/%Y %H:%M"),
-        "homeTeam":           team_map.get(home_id, f"unknown_{home_id}"),
-        "awayTeam":           team_map.get(away_id, f"unknown_{away_id}"),
-        "homeGoals":          _as_score(row.get("home_score")),
-        "awayGoals":          _as_score(row.get("away_score")),
-        "homePossession":     _as_stat(row.get("home_possession")),
-        "awayPossession":     _as_stat(row.get("away_possession")),
-        "homeShots":          _as_stat(row.get("home_total_shots")),
-        "awayShots":          _as_stat(row.get("away_total_shots")),
-        "homeShotsOnTarget":  _as_stat(row.get("home_shots_on_target")),
-        "awayShotsOnTarget":  _as_stat(row.get("away_shots_on_target")),
+        "date": dt.strftime("%d/%m/%Y %H:%M"),
+        "homeTeam": team_map.get(home_id, f"unknown_{home_id}"),
+        "awayTeam": team_map.get(away_id, f"unknown_{away_id}"),
+        "homeGoals": _as_score(row.get("home_score")),
+        "awayGoals": _as_score(row.get("away_score")),
+        "homePossession": _as_stat(row.get("home_possession")),
+        "awayPossession": _as_stat(row.get("away_possession")),
+        "homeShots": _as_stat(row.get("home_total_shots")),
+        "awayShots": _as_stat(row.get("away_total_shots")),
+        "homeShotsOnTarget": _as_stat(row.get("home_shots_on_target")),
+        "awayShotsOnTarget": _as_stat(row.get("away_shots_on_target")),
     }
 
 
 # --- main entry point ---
-def append_new_matches(api_key):
-    """Fetch new PL results from the GitHub stats repo and append to the historical CSV.
-
-    api_key: football-data.org key — kept so main.py call signature is unchanged
-             (still used there for upcoming fixture lookups).
-    """
+def append_new_matches():
+    """Fetch new PL results from the GitHub stats repo and append to the historical CSV."""
     print("Checking for new Premier League results...")
 
     if os.path.exists(HISTORICAL_CSV):
@@ -141,7 +137,7 @@ def append_new_matches(api_key):
     # drift where last_update.txt moved ahead of the actual data.
     last_update = read_last_update()
     if not df_hist.empty:
-        last_csv_dt   = pd.to_datetime(df_hist["date"], format="%d/%m/%Y %H:%M").max()
+        last_csv_dt = pd.to_datetime(df_hist["date"], format="%d/%m/%Y %H:%M").max()
         last_csv_date = last_csv_dt.to_pydatetime().replace(tzinfo=timezone.utc)
     else:
         last_csv_date = datetime(2000, 1, 1, tzinfo=timezone.utc)
@@ -150,10 +146,10 @@ def append_new_matches(api_key):
 
     # GW scan window: go back 1 to catch postponed matches, forward 4 for teams
     # that are ahead in the schedule.
-    last_gw    = read_last_gw()
+    last_gw = read_last_gw()
     scan_start = max(1, last_gw - 1)
-    scan_end   = last_gw + 4
-    scan_gws   = list(range(scan_start, scan_end + 1))
+    scan_end = last_gw + 4
+    scan_gws = list(range(scan_start, scan_end + 1))
 
     print(f"  Last update: {last_update.date()} | Latest CSV: {last_csv_date.date()}")
     print(f"  Scanning GW{scan_start}–GW{scan_end}...")
@@ -163,8 +159,8 @@ def append_new_matches(api_key):
         print("  Could not fetch team data from GitHub — check connection.")
         return
 
-    new_rows          = []
-    highest_gw_seen   = last_gw
+    new_rows = []
+    highest_gw_seen = last_gw
 
     for gw in scan_gws:
         rows = _fetch_gw_fixtures(gw)
@@ -186,9 +182,9 @@ def append_new_matches(api_key):
             converted = _convert_fixture(row, team_map)
 
             is_dup = (
-                (df_hist["homeTeam"] == converted["homeTeam"]) &
-                (df_hist["awayTeam"] == converted["awayTeam"]) &
-                (df_hist["date"]     == converted["date"])
+                    (df_hist["homeTeam"] == converted["homeTeam"]) &
+                    (df_hist["awayTeam"] == converted["awayTeam"]) &
+                    (df_hist["date"] == converted["date"])
             )
             if not df_hist[is_dup].empty:
                 continue
@@ -210,4 +206,4 @@ def append_new_matches(api_key):
 
 if __name__ == "__main__":
     load_dotenv()
-    append_new_matches(os.getenv("FOOTBALL_API_KEY"))
+    append_new_matches()

@@ -3,15 +3,11 @@ import os
 import requests
 import pandas as pd
 from datetime import datetime, timezone
+from dotenv import load_dotenv
 from simulate import simulate_match
 from utils.prediction_storage import save_prediction
 from utils.data_updater import append_new_matches
 from utils.name_mapping import normalize_team_name
-
-df = pd.read_csv("data/historical_matches.csv")
-
-# load api key from .env
-from dotenv import load_dotenv
 
 load_dotenv()
 API_KEY = os.getenv("FOOTBALL_API_KEY")
@@ -209,8 +205,10 @@ def prediction_menu(home_team, away_team, fixture_date):
 
 # main method
 def main():
+    global df
     clear_outdated_cache()
-    append_new_matches(API_KEY)
+    append_new_matches()
+    df = pd.read_csv("data/historical_matches.csv")
 
     teams = load_teams()
     team_id, team_name = display_team_menu(teams)

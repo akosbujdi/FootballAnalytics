@@ -1,99 +1,129 @@
-import pandas as pd
-import sys
 import os
+import sys
+import numpy as np
+import pandas as pd
 
-# give root path to  file
 project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
 sys.path.append(project_root)
-from simulate import simulate_match
+
+from models import poisson, random_forest
 
 DATA_PATH = "../data/historical_matches.csv"
-TEST_PERIOD_DAYS = 90 # edit to change split
 
-# MonteCarlo settings
-N_POISSON = 100
-N_RF = 20  # RandomForest much slower, hence fewer simulation
-
-# load dataset
-df = pd.read_csv(DATA_PATH)
-df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y %H:%M")
-
-# split data into train/test
-split_date = df["date"].max() - pd.Timedelta(days=TEST_PERIOD_DAYS)
-train_df = df[df["date"] <= split_date].copy()
-test_df = df[df["date"] > split_date].copy()
-
-print(f"Training on {len(train_df)} matches, testing on {len(test_df)} matches.")
-
-# evaluate function
-def evaluate_model(model_name, n_simulations):
-    outcome_correct = 0
-    score_correct = 0
-    goal_mae = 0
-    total_matches = len(test_df)
-
-    for idx, row in test_df.iterrows():
-        home = row["homeTeam"]
-        away = row["awayTeam"]
-        real_home_goals = row["homeGoals"]
-        real_away_goals = row["awayGoals"]
-
-        result = simulate_match(
-            model_name=model_name,
-            home_team=home,
-            away_team=away,
-            df=train_df,
-            n_simulations=n_simulations
-        )
-
-        # predicted outcome
-        pred_score = result["top_score"]
-        pred_home, pred_away = map(int, pred_score.split("-"))
-
-        # Outcome (H/D/A)
-        real_outcome = (
-            "H" if real_home_goals > real_away_goals else
-            "A" if real_home_goals < real_away_goals else
-            "D"
-        )
-        pred_outcome = (
-            "H" if pred_home > pred_away else
-            "A" if pred_home < pred_away else
-            "D"
-        )
-
-        if real_outcome == pred_outcome:
-            outcome_correct += 1
-        if (real_home_goals, real_away_goals) == (pred_home, pred_away):
-            score_correct += 1
-
-        # MAE on goals
-        goal_mae += abs(real_home_goals - pred_home) + abs(real_away_goals - pred_away)
-
-    outcome_acc = outcome_correct / total_matches
-    score_acc = score_correct / total_matches
-    avg_goal_mae = goal_mae / (2 * total_matches)
-
-    return {
-        "model": model_name,
-        "matches": total_matches,
-        "outcome_accuracy": outcome_acc,
-        "scoreline_accuracy": score_acc,
-        "avg_goal_mae": avg_goal_mae
-    }
+# Days from the end of the dataset held out for testing
+TEST_PERIOD_DAYS = 90
 
 
-# running evaluation
-print("Evaluating Poisson...")
-poisson_results = evaluate_model("poisson", n_simulations=N_POISSON)
+def _outcome(h, a):
+    return "H" if h > a else ("A" if h < a else "D")
 
-# print("Evaluating Random Forest...")
-# rf_results = evaluate_model("random_forest", n_simulations=N_RF)
 
-# print out summary (add rf_results)
-for res in [poisson_results]:
-    print(f"\nModel: {res['model']}")
-    print(f"Matches evaluated: {res['matches']}")
-    print(f"Outcome accuracy: {res['outcome_accuracy']:.2%}")
-    print(f"Scoreline accuracy: {res['scoreline_accuracy']:.2%}")
-    print(f"Mean Absolute Error (per goal): {res['avg_goal_mae']:.2f}")
+def _eval_poisson(df_train, df_test):
+    poisson._cache.clear()
+    strengths, league_avg_home, league_avg_away = poisson._compute_team_strengths(df_train)
+    home_adv = poisson._home_advantage_factor(df_train)
+    default = {"att": 1.0, "def": 1.0}
+
+    rows = []
+    for _, match in df_test.iterrows():
+        hs  = strengths.get(match["homeTeam"], default)
+        as_ = strengths.get(match["awayTeam"], default)
+
+        lh = float(np.clip(league_avg_home * hs["att"] * as_["def"] * home_adv, 0.3, 6.0))
+        la = float(np.clip(league_avg_away * as_["att"] * hs["def"], 0.3, 6.0))
+
+        pred_h, pred_a = round(lh), round(la)
+        act_h,  act_a  = int(match["homeGoals"]), int(match["awayGoals"])
+
+        rows.append({
+            "home": match["homeTeam"], "away": match["awayTeam"],
+            "actual": f"{act_h}-{act_a}", "predicted": f"{pred_h}-{pred_a}",
+            "exact":   pred_h == act_h and pred_a == act_a,
+            "outcome": _outcome(pred_h, pred_a) == _outcome(act_h, act_a),
+            "home_ae": abs(pred_h - act_h),
+            "away_ae": abs(pred_a - act_a),
+        })
+
+    return pd.DataFrame(rows)
+
+
+def _eval_rf(df_train, df_test):
+    random_forest._cache.clear()
+    home_model, away_model, col_means = random_forest._train(df_train)
+    df_feat = random_forest.build_features(df_train.copy())
+
+    home_feat_cols = [f for f in random_forest.FEATURES if f.startswith("h")]
+    away_feat_cols = [f for f in random_forest.FEATURES if f.startswith("a")]
+
+    rows = []
+    for _, match in df_test.iterrows():
+        lh_rows = df_feat[df_feat["homeTeam"] == match["homeTeam"]]
+        la_rows = df_feat[df_feat["awayTeam"] == match["awayTeam"]]
+
+        if lh_rows.empty or la_rows.empty:
+            feat_row = pd.DataFrame([col_means])
+        else:
+            feat_row = pd.DataFrame([{
+                **lh_rows.iloc[-1][home_feat_cols].to_dict(),
+                **la_rows.iloc[-1][away_feat_cols].to_dict(),
+            }])
+
+        feat_row = feat_row[random_forest.FEATURES].fillna(col_means).fillna(0)
+
+        exp_h = float(np.clip(home_model.predict(feat_row)[0], 0.1, 3.5))
+        exp_a = float(np.clip(away_model.predict(feat_row)[0], 0.1, 3.5))
+
+        pred_h, pred_a = round(exp_h), round(exp_a)
+        act_h,  act_a  = int(match["homeGoals"]), int(match["awayGoals"])
+
+        rows.append({
+            "home": match["homeTeam"], "away": match["awayTeam"],
+            "actual": f"{act_h}-{act_a}", "predicted": f"{pred_h}-{pred_a}",
+            "exact":   pred_h == act_h and pred_a == act_a,
+            "outcome": _outcome(pred_h, pred_a) == _outcome(act_h, act_a),
+            "home_ae": abs(pred_h - act_h),
+            "away_ae": abs(pred_a - act_a),
+        })
+
+    return pd.DataFrame(rows)
+
+
+def _print_summary(name, df_results):
+    print(f"\n{'='*45}")
+    print(f"  {name}")
+    print(f"{'='*45}")
+    print(f"  Test matches:          {len(df_results)}")
+    print(f"  Exact score accuracy:  {df_results['exact'].mean():.2%}")
+    print(f"  Outcome acc (H/D/A):   {df_results['outcome'].mean():.2%}")
+    print(f"  MAE home goals:        {df_results['home_ae'].mean():.3f}")
+    print(f"  MAE away goals:        {df_results['away_ae'].mean():.3f}")
+
+
+def main():
+    np.random.seed(42)
+
+    df = pd.read_csv(DATA_PATH)
+    df["_date"] = pd.to_datetime(df["date"], format="%d/%m/%Y %H:%M")
+    df = df.sort_values("_date").reset_index(drop=True)
+
+    # Drop rows with missing goals (unplayed fixtures)
+    df = df[df["homeGoals"].notna() & (df["homeGoals"] != "")]
+    df = df[df["awayGoals"].notna()  & (df["awayGoals"]  != "")]
+
+    split_date = df["_date"].max() - pd.Timedelta(days=TEST_PERIOD_DAYS)
+    df_train = df[df["_date"] <= split_date].drop(columns="_date").reset_index(drop=True)
+    df_test  = df[df["_date"] >  split_date].drop(columns="_date").reset_index(drop=True)
+
+    print(f"\nTrain: {len(df_train)} matches  |  Test: {len(df_test)} matches")
+    print(f"Test period: {df_test['date'].iloc[0]}  ->  {df_test['date'].iloc[-1]}")
+
+    print("\nEvaluating Poisson...")
+    _print_summary("Poisson", _eval_poisson(df_train, df_test))
+
+    print("\nEvaluating Random Forest...")
+    _print_summary("Random Forest", _eval_rf(df_train, df_test))
+    print()
+
+
+if __name__ == "__main__":
+    main()

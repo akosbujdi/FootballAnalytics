@@ -66,6 +66,7 @@ TEAM_NAME_MAP = {
 
     "Wolves": "Wolverhampton Wanderers FC",
     "Wolverhampton": "Wolverhampton Wanderers FC",
+    "Wolverhampton Wanderers": "Wolverhampton Wanderers FC",
     "Wolverhampton Wanderers FC": "Wolverhampton Wanderers FC",
 
     "Burnley": "Burnley FC",

@@ -1,7 +1,6 @@
 import json
 import os
 from datetime import datetime
-from utils.name_mapping import normalize_team_name
 
 PRED_FILE = "data/predictions.json"
 
@@ -23,8 +22,8 @@ def save_prediction(model_name, home_team, away_team, top_score, fixture_date):
         "model": model_name,
         "prediction_date": datetime.now().isoformat(),
         "fixture_date": fixture_date,
-        "home_team": normalize_team_name(home_team),
-        "away_team": normalize_team_name(away_team),
+        "home_team": home_team,
+        "away_team": away_team,
         "predicted_score": top_score
     }
 

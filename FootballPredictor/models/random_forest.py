@@ -1,125 +1,99 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
-# Global models to keep trained instance
-HOME_MODEL = None
-AWAY_MODEL = None
+# Tunable parameters
+N_ESTIMATORS = 300
+SHORT_WINDOW = 5
+LONG_WINDOW = 15
+
+STAT_COLS = [
+    'homeGoals', 'awayGoals',
+    'homePossession', 'awayPossession',
+    'homeShots', 'awayShots',
+    'homeShotsOnTarget', 'awayShotsOnTarget',
+]
+
+FEATURES = [
+    'h5_scored',  'h5_conceded',  'h5_shots',  'h5_sot',  'h5_poss',
+    'h15_scored', 'h15_conceded', 'h15_shots', 'h15_sot', 'h15_poss',
+    'a5_scored',  'a5_conceded',  'a5_shots',  'a5_sot',  'a5_poss',
+    'a15_scored', 'a15_conceded', 'a15_shots', 'a15_sot', 'a15_poss',
+]
+
+_cache = {}
+
+
+def _rolling_mean(series, window):
+    return series.shift().rolling(window, min_periods=1).mean()
+
 
 def build_features(df):
-    df = df.sort_values("date")
+    df = df.sort_values("date").copy()
+    for col in STAT_COLS:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # Short-term form (last 5 matches)
-    df["home_last5_scored"] = df.groupby("homeTeam")["homeGoals"].transform(
-        lambda x: x.shift().rolling(5, min_periods=1).mean()
-    )
-    df["home_last5_conceded"] = df.groupby("homeTeam")["awayGoals"].transform(
-        lambda x: x.shift().rolling(5, min_periods=1).mean()
-    )
-    df["away_last5_scored"] = df.groupby("awayTeam")["awayGoals"].transform(
-        lambda x: x.shift().rolling(5, min_periods=1).mean()
-    )
-    df["away_last5_conceded"] = df.groupby("awayTeam")["homeGoals"].transform(
-        lambda x: x.shift().rolling(5, min_periods=1).mean()
-    )
+    # Home team rolling stats (from their home matches)
+    for col, name in [
+        ('homeGoals', 'scored'), ('awayGoals', 'conceded'),
+        ('homeShots', 'shots'), ('homeShotsOnTarget', 'sot'), ('homePossession', 'poss'),
+    ]:
+        df[f'h5_{name}']  = df.groupby('homeTeam')[col].transform(lambda x: _rolling_mean(x, SHORT_WINDOW))
+        df[f'h15_{name}'] = df.groupby('homeTeam')[col].transform(lambda x: _rolling_mean(x, LONG_WINDOW))
 
-    # Longer-term form (last 15 matches)
-    df["home_last15_scored"] = df.groupby("homeTeam")["homeGoals"].transform(
-        lambda x: x.shift().rolling(15, min_periods=1).mean()
-    )
-    df["home_last15_conceded"] = df.groupby("homeTeam")["awayGoals"].transform(
-        lambda x: x.shift().rolling(15, min_periods=1).mean()
-    )
-    df["away_last15_scored"] = df.groupby("awayTeam")["awayGoals"].transform(
-        lambda x: x.shift().rolling(15, min_periods=1).mean()
-    )
-    df["away_last15_conceded"] = df.groupby("awayTeam")["homeGoals"].transform(
-        lambda x: x.shift().rolling(15, min_periods=1).mean()
-    )
-
-    # Season averages (overall team strength)
-    home_season = df.groupby("homeTeam")[["homeGoals","awayGoals"]].transform("mean")
-    away_season = df.groupby("awayTeam")[["homeGoals","awayGoals"]].transform("mean")
-
-    df["home_season_scored"] = home_season["homeGoals"]
-    df["home_season_conceded"] = home_season["awayGoals"]
-    df["away_season_scored"] = away_season["awayGoals"]
-    df["away_season_conceded"] = away_season["homeGoals"]
-
-    # Drop NaNs (at start of dataset)
-    # df = df.dropna()
+    # Away team rolling stats (from their away matches)
+    for col, name in [
+        ('awayGoals', 'scored'), ('homeGoals', 'conceded'),
+        ('awayShots', 'shots'), ('awayShotsOnTarget', 'sot'), ('awayPossession', 'poss'),
+    ]:
+        df[f'a5_{name}']  = df.groupby('awayTeam')[col].transform(lambda x: _rolling_mean(x, SHORT_WINDOW))
+        df[f'a15_{name}'] = df.groupby('awayTeam')[col].transform(lambda x: _rolling_mean(x, LONG_WINDOW))
 
     return df
 
-def train(df):
-    global HOME_MODEL, AWAY_MODEL
 
+def _train(df):
     df = build_features(df.copy())
+    col_means = df[FEATURES].mean()
+    X = df[FEATURES].fillna(col_means).fillna(0)
+    y_home = df['homeGoals']
+    y_away = df['awayGoals']
 
-    features = [
-        # Short-term
-        "home_last5_scored","home_last5_conceded",
-        "away_last5_scored","away_last5_conceded",
-        # Long-term
-        "home_last15_scored","home_last15_conceded",
-        "away_last15_scored","away_last15_conceded",
-        # Season-level
-        "home_season_scored","home_season_conceded",
-        "away_season_scored","away_season_conceded"
-    ]
+    home_model = RandomForestRegressor(n_estimators=N_ESTIMATORS, random_state=42)
+    away_model = RandomForestRegressor(n_estimators=N_ESTIMATORS, random_state=42)
+    home_model.fit(X, y_home)
+    away_model.fit(X, y_away)
+    return home_model, away_model, col_means
 
-    X = df[features]
-    y_home = df["homeGoals"]
-    y_away = df["awayGoals"]
 
-    HOME_MODEL = RandomForestRegressor(n_estimators=300, random_state=42)
-    AWAY_MODEL = RandomForestRegressor(n_estimators=300, random_state=42)
+def _get_models(df):
+    key = len(df)
+    if key not in _cache:
+        _cache[key] = _train(df)
+    return _cache[key]
 
-    HOME_MODEL.fit(X, y_home)
-    AWAY_MODEL.fit(X, y_away)
 
 def predict(home_team, away_team, df):
-    global HOME_MODEL, AWAY_MODEL
+    home_model, away_model, col_means = _get_models(df)
 
-    if HOME_MODEL is None:
-        train(df)
+    df_feat = build_features(df.copy())
+    latest_home = df_feat[df_feat['homeTeam'] == home_team]
+    latest_away = df_feat[df_feat['awayTeam'] == away_team]
 
-    df = build_features(df.copy())
+    if latest_home.empty or latest_away.empty:
+        row = pd.DataFrame([col_means])
+    else:
+        h = latest_home.iloc[-1]
+        a = latest_away.iloc[-1]
+        home_feats = ['h5_scored', 'h5_conceded', 'h5_shots', 'h5_sot', 'h5_poss',
+                      'h15_scored', 'h15_conceded', 'h15_shots', 'h15_sot', 'h15_poss']
+        away_feats = ['a5_scored', 'a5_conceded', 'a5_shots', 'a5_sot', 'a5_poss',
+                      'a15_scored', 'a15_conceded', 'a15_shots', 'a15_sot', 'a15_poss']
+        row = pd.DataFrame([{**h[home_feats].to_dict(), **a[away_feats].to_dict()}])
 
-    # Get latest row for each team
-    latest_home = df[df["homeTeam"] == home_team].iloc[-1]
-    latest_away = df[df["awayTeam"] == away_team].iloc[-1]
+    row = row[FEATURES].fillna(col_means).fillna(0)
 
-    X_new = pd.DataFrame([{
-        # Short-term
-        "home_last5_scored": latest_home["home_last5_scored"],
-        "home_last5_conceded": latest_home["home_last5_conceded"],
-        "away_last5_scored": latest_away["away_last5_scored"],
-        "away_last5_conceded": latest_away["away_last5_conceded"],
-        # Long-term
-        "home_last15_scored": latest_home["home_last15_scored"],
-        "home_last15_conceded": latest_home["home_last15_conceded"],
-        "away_last15_scored": latest_away["away_last15_scored"],
-        "away_last15_conceded": latest_away["away_last15_conceded"],
-        # Season
-        "home_season_scored": latest_home["home_season_scored"],
-        "home_season_conceded": latest_home["home_season_conceded"],
-        "away_season_scored": latest_away["away_season_scored"],
-        "away_season_conceded": latest_away["away_season_conceded"],
-    }])
+    expected_home = float(np.clip(home_model.predict(row)[0], 0.1, 3.5))
+    expected_away = float(np.clip(away_model.predict(row)[0], 0.1, 3.5))
 
-    # Predict expected goals
-    expected_home = HOME_MODEL.predict(X_new)[0]
-    expected_away = AWAY_MODEL.predict(X_new)[0]
-
-    # Clip expected goals to reasonable range
-    expected_home = np.clip(expected_home, 0.1, 3.5)
-    expected_away = np.clip(expected_away, 0.1, 3.5)
-
-    # Poisson sampling to create stochastic goals
-    simulated_home = np.random.poisson(expected_home)
-    simulated_away = np.random.poisson(expected_away)
-
-    return simulated_home, simulated_away
-
-
+    return int(np.random.poisson(expected_home)), int(np.random.poisson(expected_away))
