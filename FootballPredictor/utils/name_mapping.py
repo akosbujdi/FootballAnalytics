@@ -34,6 +34,7 @@ TEAM_NAME_MAP = {
     "Manchester City FC": "Manchester City FC",
 
     "Man Utd": "Manchester United FC",
+    "Manchester Utd": "Manchester United FC",
     "Manchester United": "Manchester United FC",
     "Manchester United FC": "Manchester United FC",
 
@@ -42,6 +43,7 @@ TEAM_NAME_MAP = {
     "Newcastle United FC": "Newcastle United FC",
 
     "Nottingham Forest": "Nottingham Forest FC",
+    "Nottingham": "Nottingham Forest FC",
     "Nott'm Forest": "Nottingham Forest FC",
     "Nottingham Forest FC": "Nottingham Forest FC",
 
