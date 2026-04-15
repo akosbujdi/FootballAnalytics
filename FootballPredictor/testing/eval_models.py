@@ -10,16 +10,16 @@ sys.path.append(project_root)
 from models import poisson, random_forest, xgboost_model
 
 DATA_PATH = "../data/historical_matches.csv"
-TEST_PERIOD_DAYS = 90  # days from dataset end held out for testing
+TEST_PERIOD_DAYS = 250
 MAX_GOALS = 8
+DRAW_THRESHOLD = 0.4  # predict draw if neither H nor A exceeds this confidence
 
 
 def _outcome(hg, ag):
     return 'H' if hg > ag else ('D' if hg == ag else 'A')
 
 
-# Poisson evaluation
-def _most_likely(lh, la):
+def _most_likely_poisson(lh, la):
     g = np.arange(MAX_GOALS + 1)
     mat = np.outer(_spois.pmf(g, lh), _spois.pmf(g, la))
     home_p = np.tril(mat, k=-1).sum()
@@ -39,16 +39,34 @@ def _eval_poisson(df_train, df_test):
         as_ = strengths.get(m["awayTeam"], default)
         lh = float(np.clip(avg_home * hs["att"] * as_["def"] * home_adv, 0.3, 6.0))
         la = float(np.clip(avg_away * as_["att"] * hs["def"], 0.3, 6.0))
-        rows.append({
-            "actual": _outcome(int(m["homeGoals"]), int(m["awayGoals"])),
-            "predicted": _most_likely(lh, la),
-        })
+        rows.append({"actual": _outcome(int(m["homeGoals"]), int(m["awayGoals"])),
+                     "predicted": _most_likely_poisson(lh, la)})
     return pd.DataFrame(rows)
 
 
-# Classifier evaluation
+def _eval_ensemble(df_train, df_test, draw_threshold=0.0):
+    # average rf + xgboost probabilities before predicting
+    random_forest._cache.clear()
+    xgboost_model._cache.clear()
+    rf_model, rf_means = random_forest._train(df_train)
+    xgb_model, xgb_means = xgboost_model._train(df_train)
+    form = random_forest._current_form(df_train)
+    rows = []
+    for _, m in df_test.iterrows():
+        h2h = random_forest._h2h_stats(m["homeTeam"], m["awayTeam"], df_train, rf_means)
+        row_dict = random_forest._build_predict_row(m["homeTeam"], m["awayTeam"], form, rf_means, h2h)
+        row = pd.DataFrame([row_dict])[random_forest.FEATURES].fillna(pd.Series(rf_means)).fillna(0)
+        probs = (rf_model.predict_proba(row)[0] + xgb_model.predict_proba(row)[0]) / 2
+        if max(probs[0], probs[2]) < draw_threshold:
+            pred = 'D'
+        else:
+            pred = ['H', 'D', 'A'][int(np.argmax(probs))]
+        rows.append({"actual": _outcome(int(m["homeGoals"]), int(m["awayGoals"])),
+                     "predicted": pred})
+    return pd.DataFrame(rows)
 
-def _eval_classifier(train_fn, cache, df_train, df_test):
+
+def _eval_classifier(train_fn, cache, df_train, df_test, draw_threshold=0.0):
     cache.clear()
     model, col_means = train_fn(df_train)
     form = random_forest._current_form(df_train)
@@ -57,47 +75,23 @@ def _eval_classifier(train_fn, cache, df_train, df_test):
         h2h = random_forest._h2h_stats(m["homeTeam"], m["awayTeam"], df_train, col_means)
         row_dict = random_forest._build_predict_row(m["homeTeam"], m["awayTeam"], form, col_means, h2h)
         row = pd.DataFrame([row_dict])[random_forest.FEATURES].fillna(pd.Series(col_means)).fillna(0)
-        probs = model.predict_proba(row)[0]  # [p_H, p_D, p_A]
-        pred_out = ['H', 'D', 'A'][int(np.argmax(probs))]
-        rows.append({
-            "actual": _outcome(int(m["homeGoals"]), int(m["awayGoals"])),
-            "predicted": pred_out,
-        })
+        probs = model.predict_proba(row)[0]
+        # passive draw: if neither H nor A clears threshold, call it a draw
+        if max(probs[0], probs[2]) < draw_threshold:
+            pred = 'D'
+        else:
+            pred = ['H', 'D', 'A'][int(np.argmax(probs))]
+        rows.append({"actual": _outcome(int(m["homeGoals"]), int(m["awayGoals"])),
+                     "predicted": pred})
     return pd.DataFrame(rows)
 
 
-# Reporting
+def _summary(df_r):
+    # returns (overall_acc, home_acc, draw_acc, away_acc)
+    acc = lambda out: (df_r.loc[df_r['actual'] == out, 'predicted'] == out).mean() if (
+            df_r['actual'] == out).any() else float('nan')
+    return (df_r['actual'] == df_r['predicted']).mean(), acc('H'), acc('D'), acc('A')
 
-def _print_summary(name, df_r):
-    n = len(df_r)
-    correct = (df_r['actual'] == df_r['predicted']).mean()
-    print(f"\n{'=' * 52}")
-    print(f"  {name}  (n={n})")
-    print(f"{'=' * 52}")
-    print(f"  Outcome accuracy:        {correct:.2%}")
-    for outcome, label in [('H', 'Home win'), ('D', 'Draw   '), ('A', 'Away win')]:
-        mask = df_r['actual'] == outcome
-        cnt = mask.sum()
-        if cnt > 0:
-            cls_acc = (df_r.loc[mask, 'predicted'] == outcome).mean()
-            print(f"  {label} ({cnt:3d} actual):   {cls_acc:.2%} correctly predicted")
-
-
-def _print_baselines(df_test):
-    actuals = [_outcome(int(r['homeGoals']), int(r['awayGoals'])) for _, r in df_test.iterrows()]
-    sr = pd.Series(actuals)
-    print(f"\n{'=' * 52}")
-    print(f"  Baselines  (n={len(df_test)})")
-    print(f"{'=' * 52}")
-    dist = sr.value_counts()
-    for k, v in dist.items():
-        print(f"  Actual {k}: {v / len(sr):.2%}  ({v} matches)")
-    print(f"  Always predict Home win: {(sr == 'H').mean():.2%}")
-    most_common = dist.index[0]
-    print(f"  Always predict '{most_common}' (most common): {(sr == most_common).mean():.2%}")
-
-
-# Main
 
 def main():
     df = pd.read_csv(DATA_PATH)
@@ -110,20 +104,50 @@ def main():
     df_train = df[df["_date"] <= split_date].drop(columns="_date").reset_index(drop=True)
     df_test = df[df["_date"] > split_date].drop(columns="_date").reset_index(drop=True)
 
-    print(f"\nTrain: {len(df_train)} matches  |  Test: {len(df_test)} matches")
-    print(f"Test period: {df_test['date'].iloc[0]}  ->  {df_test['date'].iloc[-1]}")
+    print(f"\ntrain: {len(df_train)} matches  |  test: {len(df_test)} matches"
+          f"  ({df_test['date'].iloc[0]} -> {df_test['date'].iloc[-1]})")
 
-    _print_baselines(df_test)
+    # actual distribution in test set
+    actuals = pd.Series([_outcome(int(r['homeGoals']), int(r['awayGoals'])) for _, r in df_test.iterrows()])
+    dist = actuals.value_counts()
+    print(f"\ntest distribution:  "
+          + "  ".join(f"{k}={v} ({v / len(actuals):.0%})" for k, v in dist.items()))
+    print(f"naive baseline (always H): {(actuals == 'H').mean():.2%}  "
+          f"(always {dist.index[1]}): {dist.iloc[1] / len(actuals):.2%}")
 
-    print("\nEvaluating Poisson...")
-    _print_summary("Poisson (statistical baseline)", _eval_poisson(df_train, df_test))
+    def fmt(v):
+        return f"{v:.0%}" if not (isinstance(v, float) and v != v) else "n/a"
 
-    print("\nEvaluating Random Forest...")
-    _print_summary("Random Forest", _eval_classifier(random_forest._train, random_forest._cache, df_train, df_test))
+    # standard argmax results
+    print(f"\n{'model':<22} {'overall':>8} {'home':>8} {'draw':>8} {'away':>8}")
+    print(f"  {'(argmax, n=' + str(len(df_test)) + ')':<20} {'acc':>8} {'acc':>8} {'acc':>8} {'acc':>8}")
+    results = [
+        ("poisson", _eval_poisson(df_train, df_test)),
+        ("random forest", _eval_classifier(random_forest._train, random_forest._cache, df_train, df_test)),
+        ("xgboost", _eval_classifier(xgboost_model._train, xgboost_model._cache, df_train, df_test)),
+        ("ensemble", _eval_ensemble(df_train, df_test)),
+    ]
+    for name, df_r in results:
+        overall, h, d, a = _summary(df_r)
+        print(f"  {name:<20} {fmt(overall):>8} {fmt(h):>8} {fmt(d):>8} {fmt(a):>8}")
 
-    print("\nEvaluating XGBoost...")
-    _print_summary("XGBoost", _eval_classifier(xgboost_model._train, xgboost_model._cache, df_train, df_test))
-    print()
+    # passive draw threshold results
+    print(f"\n{'model':<22} {'overall':>8} {'home':>8} {'draw':>8} {'away':>8}")
+    print(
+        f"  {'(draw<' + str(DRAW_THRESHOLD) + ', n=' + str(len(df_test)) + ')':<20} {'acc':>8} {'acc':>8} {'acc':>8} {'acc':>8}")
+    results_passive = [
+        ("poisson", _eval_poisson(df_train, df_test)),
+        ("random forest",
+         _eval_classifier(random_forest._train, random_forest._cache, df_train, df_test, DRAW_THRESHOLD)),
+        ("xgboost", _eval_classifier(xgboost_model._train, xgboost_model._cache, df_train, df_test, DRAW_THRESHOLD)),
+        ("ensemble", _eval_ensemble(df_train, df_test, DRAW_THRESHOLD)),
+    ]
+    for name, df_r in results_passive:
+        overall, h, d, a = _summary(df_r)
+        print(f"  {name:<20} {fmt(overall):>8} {fmt(h):>8} {fmt(d):>8} {fmt(a):>8}")
+
+    print(f"\nnote: draw threshold predicts draw when neither H nor A confidence exceeds {DRAW_THRESHOLD}")
+    print(f"  tune DRAW_THRESHOLD at the top of this file to see the tradeoff")
 
 
 if __name__ == "__main__":

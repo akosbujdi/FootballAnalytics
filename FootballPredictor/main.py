@@ -176,15 +176,15 @@ def prediction_menu(home_team, away_team, fixture_date):
                 home_team=home_team,
                 away_team=away_team,
                 df=df,
-                n_simulations=20
-            )
-
-            print(
-                f"Predicted outcome probabilities:\n"
             )
 
             probs = result["probabilities"]
 
+            print(
+                f"Most likely scoreline:\n"
+                f"{home_team} {result['top_score']} {away_team}\n"
+                f"Probability: {result['top_score_percentage']:.2%}\n"
+            )
             print(f"{home_team} win probability: {probs['home_win']:.2%}")
             print(f"Draw probability: {probs['draw']:.2%}")
             print(f"{away_team} win probability: {probs['away_win']:.2%}\n")
@@ -209,10 +209,15 @@ def prediction_menu(home_team, away_team, fixture_date):
                 home_team=home_team,
                 away_team=away_team,
                 df=df,
-                n_simulations=20
             )
 
             probs = result["probabilities"]
+
+            print(
+                f"Most likely scoreline:\n"
+                f"{home_team} {result['top_score']} {away_team}\n"
+                f"Probability: {result['top_score_percentage']:.2%}\n"
+            )
             print(f"{home_team} win probability: {probs['home_win']:.2%}")
             print(f"Draw probability: {probs['draw']:.2%}")
             print(f"{away_team} win probability: {probs['away_win']:.2%}\n")
@@ -245,11 +250,11 @@ def main():
 
     fixture = get_cached_fixture(team_id, API_KEY)
 
-    if fixture:
-        print(f"Next match: {fixture['home']} vs {fixture['away']} on {fixture['date']}\n")
-    else:
+    if not fixture:
         print("No upcoming fixture found for this team.")
+        return
 
+    print(f"Next match: {fixture['home']} vs {fixture['away']} on {fixture['date']}\n")
     prediction_menu(fixture['home'], fixture['away'], fixture['date'])
 
 
