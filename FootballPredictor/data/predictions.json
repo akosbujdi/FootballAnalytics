@@ -1,66 +1,18 @@
 [
     {
-        "model": "random_forest",
-        "prediction_date": "2026-04-15T13:55:00.695480",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "0-1"
-    },
-    {
         "model": "xgboost",
-        "prediction_date": "2026-04-15T13:55:14.449937",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "0-1"
-    },
-    {
-        "model": "xgboost",
-        "prediction_date": "2026-04-15T13:55:24.828099",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "1-1"
+        "prediction_date": "2026-04-15T19:39:01.907660",
+        "fixture_date": "2026-04-18T16:30:00Z",
+        "home_team": "Tottenham Hotspur FC",
+        "away_team": "Brighton & Hove Albion FC",
+        "predicted_score": "0-2"
     },
     {
         "model": "poisson",
-        "prediction_date": "2026-04-15T14:02:51.134514",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "1-0"
-    },
-    {
-        "model": "random_forest",
-        "prediction_date": "2026-04-15T14:03:06.040486",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
+        "prediction_date": "2026-04-15T19:39:21.529700",
+        "fixture_date": "2026-04-18T16:30:00Z",
+        "home_team": "Tottenham Hotspur FC",
+        "away_team": "Brighton & Hove Albion FC",
         "predicted_score": "0-1"
-    },
-    {
-        "model": "xgboost",
-        "prediction_date": "2026-04-15T14:03:37.138207",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "0-1"
-    },
-    {
-        "model": "random_forest",
-        "prediction_date": "2026-04-15T14:18:10.438249",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "1-0"
-    },
-    {
-        "model": "xgboost",
-        "prediction_date": "2026-04-15T14:18:24.737949",
-        "fixture_date": "2026-04-18T14:00:00Z",
-        "home_team": "Leeds United FC",
-        "away_team": "Wolverhampton Wanderers FC",
-        "predicted_score": "1-0"
     }
 ]

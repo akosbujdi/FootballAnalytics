@@ -293,7 +293,7 @@ def _train(df):
     valid = df[FEATURES + ['_target']].dropna()
     X, y = valid[FEATURES], valid['_target'].astype(int)
     model = RandomForestClassifier(
-        n_estimators=250, max_depth=6, min_samples_leaf=5,
+        n_estimators=220, max_depth=6, min_samples_leaf=5,
         max_features='sqrt', random_state=42, n_jobs=-1,
     )
     model.fit(X, y)
