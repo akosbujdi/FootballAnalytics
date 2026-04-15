@@ -6,5 +6,29 @@
         "home_team": "Liverpool FC",
         "away_team": "Fulham FC",
         "predicted_score": "2-1"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-15T11:15:56.501475",
+        "fixture_date": "2026-04-18T14:00:00Z",
+        "home_team": "Leeds United FC",
+        "away_team": "Wolverhampton Wanderers FC",
+        "predicted_score": "N/A"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-15T11:16:44.742577",
+        "fixture_date": "2026-04-18T14:00:00Z",
+        "home_team": "Leeds United FC",
+        "away_team": "Wolverhampton Wanderers FC",
+        "predicted_score": "2-0"
+    },
+    {
+        "model": "random_forest",
+        "prediction_date": "2026-04-15T11:16:59.692088",
+        "fixture_date": "2026-04-18T14:00:00Z",
+        "home_team": "Leeds United FC",
+        "away_team": "Wolverhampton Wanderers FC",
+        "predicted_score": "N/A"
     }
 ]

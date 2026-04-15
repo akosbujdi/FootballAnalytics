@@ -5,9 +5,9 @@ import pandas as pd
 RECENCY_BIAS = True
 
 # Tunable parameters
-HALF_LIFE_DAYS = 20          # weight halves every N days
-MIN_MATCHES_CONFIDENCE = 5   # below this, blend with league average
-PROMOTED_BLEND = 0.25         # data trust weight for promoted/new teams
+HALF_LIFE_DAYS = 20  # weight halves every N days
+MIN_MATCHES_CONFIDENCE = 5  # below this, blend with league average
+PROMOTED_BLEND = 0.25  # data trust weight for promoted/new teams
 
 
 def _recency_weights(dates: pd.Series, half_life_days: int = HALF_LIFE_DAYS) -> np.ndarray:
@@ -46,15 +46,15 @@ def _compute_team_strengths(df: pd.DataFrame):
             strengths[team] = {"att": 1.0, "def": 1.0, "n": 0}
             continue
 
-        all_goals_scored   = pd.concat([home_rows['homeGoals'], away_rows['awayGoals']])
+        all_goals_scored = pd.concat([home_rows['homeGoals'], away_rows['awayGoals']])
         all_goals_conceded = pd.concat([home_rows['awayGoals'], away_rows['homeGoals']])
-        all_dates          = pd.concat([home_rows['date'],      away_rows['date']])
+        all_dates = pd.concat([home_rows['date'], away_rows['date']])
         all_weights = _recency_weights(all_dates) if RECENCY_BIAS else pd.Series(np.ones(n_total))
 
-        wmean_scored   = _weighted_mean(all_goals_scored,   all_weights)
+        wmean_scored = _weighted_mean(all_goals_scored, all_weights)
         wmean_conceded = _weighted_mean(all_goals_conceded, all_weights)
 
-        raw_att = wmean_scored   / league_avg if league_avg > 0 else 1.0
+        raw_att = wmean_scored / league_avg if league_avg > 0 else 1.0
         raw_def = wmean_conceded / league_avg if league_avg > 0 else 1.0
 
         # Promoted/low-sample teams: blend towards neutral (1.0)
@@ -64,7 +64,7 @@ def _compute_team_strengths(df: pd.DataFrame):
         strengths[team] = {
             "att": blend * raw_att + (1 - blend) * 1.0,
             "def": blend * raw_def + (1 - blend) * 1.0,
-            "n":   n_total,
+            "n": n_total,
         }
 
     return strengths, league_avg_home, league_avg_away
@@ -92,7 +92,7 @@ def predict(home_team: str, away_team: str, df: pd.DataFrame):
     strengths, league_avg_home, league_avg_away = _get_strengths(df)
 
     default = {"att": 1.0, "def": 1.0, "n": 0}
-    hs  = strengths.get(home_team, default)
+    hs = strengths.get(home_team, default)
     as_ = strengths.get(away_team, default)
 
     home_adv = _home_advantage_factor(df)

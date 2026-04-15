@@ -125,6 +125,7 @@ def prediction_menu(home_team, away_team, fixture_date):
         print("Predict the scoreline using:")
         print("1. Statistical (Poisson)")
         print("2. AI (Random Forest)")
+        print("3. AI (XGBoost)")
 
         try:
             choice = int(input("\nSelect an option: "))
@@ -199,8 +200,35 @@ def prediction_menu(home_team, away_team, fixture_date):
 
             break
 
+        # xgboost
+        elif choice == 3:
+            print("\nRunning XGBoost AI simulation...\n")
+
+            result = simulate_match(
+                model_name="xgboost",
+                home_team=home_team,
+                away_team=away_team,
+                df=df,
+                n_simulations=20
+            )
+
+            probs = result["probabilities"]
+            print(f"{home_team} win probability: {probs['home_win']:.2%}")
+            print(f"Draw probability: {probs['draw']:.2%}")
+            print(f"{away_team} win probability: {probs['away_win']:.2%}\n")
+
+            save_prediction(
+                model_name=result["model_used"],
+                home_team=home_team,
+                away_team=away_team,
+                top_score=result["top_score"],
+                fixture_date=fixture_date
+            )
+
+            break
+
         else:
-            print(f"\nInvalid choice. Enter 1 or 2.\n")
+            print(f"\nInvalid choice. Enter 1, 2, or 3.\n")
 
 
 # main method
