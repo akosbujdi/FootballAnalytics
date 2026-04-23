@@ -1,7 +1,71 @@
 [
     {
         "model": "xgboost",
-        "prediction_date": "2026-04-15T19:39:01.907660",
+        "prediction_date": "2026-04-16T00:05:51.844713",
+        "fixture_date": "2026-04-19T15:30:00Z",
+        "home_team": "Manchester City FC",
+        "away_team": "Arsenal FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-16T00:05:58.653851",
+        "fixture_date": "2026-04-19T15:30:00Z",
+        "home_team": "Manchester City FC",
+        "away_team": "Arsenal FC",
+        "predicted_score": "2-0"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-16T00:06:04.636411",
+        "fixture_date": "2026-04-19T13:00:00Z",
+        "home_team": "Aston Villa FC",
+        "away_team": "Sunderland AFC",
+        "predicted_score": "0-1"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-16T00:06:10.222293",
+        "fixture_date": "2026-04-19T13:00:00Z",
+        "home_team": "Aston Villa FC",
+        "away_team": "Sunderland AFC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-16T00:06:17.573047",
+        "fixture_date": "2026-04-18T14:00:00Z",
+        "home_team": "Newcastle United FC",
+        "away_team": "AFC Bournemouth",
+        "predicted_score": "0-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-16T00:06:22.038207",
+        "fixture_date": "2026-04-18T14:00:00Z",
+        "home_team": "Newcastle United FC",
+        "away_team": "AFC Bournemouth",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-16T00:06:29.683576",
+        "fixture_date": "2026-04-18T11:30:00Z",
+        "home_team": "Brentford FC",
+        "away_team": "Fulham FC",
+        "predicted_score": "1-0"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-16T00:06:32.915295",
+        "fixture_date": "2026-04-18T11:30:00Z",
+        "home_team": "Brentford FC",
+        "away_team": "Fulham FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-16T00:06:44.724576",
         "fixture_date": "2026-04-18T16:30:00Z",
         "home_team": "Tottenham Hotspur FC",
         "away_team": "Brighton & Hove Albion FC",
@@ -9,10 +73,58 @@
     },
     {
         "model": "poisson",
-        "prediction_date": "2026-04-15T19:39:21.529700",
+        "prediction_date": "2026-04-16T00:06:49.032843",
         "fixture_date": "2026-04-18T16:30:00Z",
         "home_team": "Tottenham Hotspur FC",
         "away_team": "Brighton & Hove Albion FC",
         "predicted_score": "0-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-16T00:06:59.176427",
+        "fixture_date": "2026-04-19T13:00:00Z",
+        "home_team": "Nottingham Forest FC",
+        "away_team": "Burnley FC",
+        "predicted_score": "2-0"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-16T00:07:03.687476",
+        "fixture_date": "2026-04-19T13:00:00Z",
+        "home_team": "Nottingham Forest FC",
+        "away_team": "Burnley FC",
+        "predicted_score": "1-0"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-16T00:07:13.218120",
+        "fixture_date": "2026-04-19T13:00:00Z",
+        "home_team": "Everton FC",
+        "away_team": "Liverpool FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-16T00:07:16.205642",
+        "fixture_date": "2026-04-19T13:00:00Z",
+        "home_team": "Everton FC",
+        "away_team": "Liverpool FC",
+        "predicted_score": "1-1"
+    },
+    {
+        "model": "poisson",
+        "prediction_date": "2026-04-21T14:12:54.442858",
+        "fixture_date": "2026-04-21T19:00:00Z",
+        "home_team": "Brighton & Hove Albion FC",
+        "away_team": "Chelsea FC",
+        "predicted_score": "2-0"
+    },
+    {
+        "model": "xgboost",
+        "prediction_date": "2026-04-21T14:12:58.818238",
+        "fixture_date": "2026-04-21T19:00:00Z",
+        "home_team": "Brighton & Hove Albion FC",
+        "away_team": "Chelsea FC",
+        "predicted_score": "1-1"
     }
 ]

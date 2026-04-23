@@ -182,7 +182,7 @@ def style_outcome(col):
 
 # ── page setup ────────────────────────────────────────────────────────────────
 
-st.set_page_config(page_title="Football Predictor", layout="centered")
+st.set_page_config(page_title="Football Predictor", page_icon="⚽", layout="centered")
 st.title("Football Predictor")
 st.markdown(
     """
@@ -413,7 +413,7 @@ with tab_history:
 
         # build all rows
         all_rows = []
-        for p in reversed(predictions):
+        for p in predictions:
             model_display = MODEL_LABELS.get(p["model"], p["model"])
             fixture_dt = datetime.fromisoformat(p["fixture_date"].replace("Z", "+00:00"))
             pred_dt = datetime.fromisoformat(p["prediction_date"])
@@ -441,12 +441,17 @@ with tab_history:
                 "Home": p["home_team"],
                 "Away": p["away_team"],
                 "Fixture date": fixture_dt.strftime("%d %b %Y"),
+                "_sort": fixture_dt,
                 "Model": model_display,
                 "Predicted": p["predicted_score"],
                 "Actual": actual_score,
                 "Outcome": outcome,
                 "Predicted on": pred_dt.strftime("%d %b %Y %H:%M"),
             })
+
+        all_rows.sort(key=lambda r: r["_sort"])
+        for r in all_rows:
+            del r["_sort"]
 
         # summary stats
         resolved = [r for r in all_rows if r["Outcome"] != "Pending"]
