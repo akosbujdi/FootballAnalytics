@@ -206,6 +206,13 @@ st.markdown(
     [data-testid="stMetricLabel"] { justify-content: center; display: flex; width: 100%; }
     [data-testid="stMetricLabel"] p { text-align: center; width: 100%; }
     hr { margin-top: 0.8rem !important; margin-bottom: 0.8rem !important; }
+    [data-testid="stButton"] { margin-top: -0.5rem; }
+    [data-testid="stButton"] button {
+        background-color: #1976D2 !important;
+        color: white !important;
+        border: none !important;
+    }
+    [data-testid="stButton"] button:hover { background-color: #1565C0 !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -453,47 +460,28 @@ with tab_history:
         for r in all_rows:
             del r["_sort"]
 
-        # summary stats
-        resolved = [r for r in all_rows if r["Outcome"] != "Pending"]
-        correct = [r for r in resolved if r["Outcome"] == "Correct"]
-        pct = len(correct) / len(resolved) * 100 if resolved else 0
-
-        stats_col, clear_col = st.columns([4, 1])
-        with stats_col:
-            st.caption(
-                f"{len(all_rows)} predictions · {len(resolved)} resolved · "
-                f"{len(correct)} correct ({pct:.0f}%)"
-            )
-        with clear_col:
-            st.markdown(
-                """
-                <style>
-                .clear-marker + div[data-testid="stButton"] button {
-                    background-color: #1976D2 !important;
-                    color: white !important;
-                    border: none !important;
-                }
-                .clear-marker + div[data-testid="stButton"] button:hover {
-                    background-color: #1565C0 !important;
-                }
-                </style>
-                <div class="clear-marker"></div>
-                """,
-                unsafe_allow_html=True,
-            )
-            if st.button("Clear history", width="stretch"):
-                with open(PRED_FILE, "w") as f:
-                    json.dump([], f)
-                st.rerun()
-
         selected_models = st.multiselect(
             "Filter by model", list(MODEL_LABELS.values()), default=list(MODEL_LABELS.values())
         )
 
         filtered = [r for r in all_rows if r["Model"] in selected_models]
 
+        # summary stats based on current filter
+        resolved = [r for r in filtered if r["Outcome"] != "Pending"]
+        correct = [r for r in resolved if r["Outcome"] == "Correct"]
+        pct = len(correct) / len(resolved) * 100 if resolved else 0
+        st.caption(
+            f"{len(filtered)} predictions · {len(resolved)} resolved · "
+            f"{len(correct)} correct ({pct:.0f}%)"
+        )
+
         if filtered:
             styled = pd.DataFrame(filtered).style.apply(style_outcome, subset=["Outcome"])
             st.dataframe(styled, width="stretch", hide_index=True)
         else:
             st.info("No predictions match the selected filters.")
+
+        if st.button("Clear history"):
+            with open(PRED_FILE, "w") as f:
+                json.dump([], f)
+            st.rerun()

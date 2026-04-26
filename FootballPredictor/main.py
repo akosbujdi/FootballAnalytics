@@ -71,7 +71,7 @@ def get_next_fixture(team_id, api_key):
     response = requests.get(url, headers=headers, params=params)
     data = response.json()
 
-    if data['matches']:
+    if data.get('matches'):
         match = data['matches'][0]
         home = normalize_team_name(match['homeTeam']['name'])
         away = normalize_team_name(match['awayTeam']['name'])
