@@ -1,1 +1,5 @@
+# Windows
 py -m streamlit run app.py
+
+# Mac
+python -m streamlit run app.py
