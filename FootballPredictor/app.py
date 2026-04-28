@@ -35,8 +35,7 @@ CONF_COLORS = {
 }
 
 
-# ── data loaders ─────────────────────────────────────────────────────────────
-
+# data loaders
 @st.cache_data(show_spinner=False)
 def load_data():
     append_new_matches()
@@ -70,8 +69,7 @@ def load_predictions():
             return []
 
 
-# ── stat helpers ──────────────────────────────────────────────────────────────
-
+# stat helpers
 def get_recent_form(df, team, n=5):
     matches = df[(df["homeTeam"] == team) | (df["awayTeam"] == team)]
     matches = matches.sort_values("date_parsed", ascending=False).head(n)
@@ -123,8 +121,7 @@ def get_h2h(df, home, away, n=5):
     return h2h.sort_values("date_parsed", ascending=False).head(n)
 
 
-# ── ui helpers ────────────────────────────────────────────────────────────────
-
+# ui helpers
 def confidence_label(probs):
     best = max(probs.values())
     if best >= 0.60:
@@ -180,8 +177,7 @@ def style_outcome(col):
     return styles
 
 
-# ── page setup ────────────────────────────────────────────────────────────────
-
+# page setup
 st.set_page_config(page_title="Football Predictor", page_icon="⚽", layout="centered")
 st.title("Football Predictor")
 st.markdown(
@@ -207,12 +203,6 @@ st.markdown(
     [data-testid="stMetricLabel"] p { text-align: center; width: 100%; }
     hr { margin-top: 0.8rem !important; margin-bottom: 0.8rem !important; }
     [data-testid="stButton"] { margin-top: -0.5rem; }
-    [data-testid="stButton"] button {
-        background-color: #1976D2 !important;
-        color: white !important;
-        border: none !important;
-    }
-    [data-testid="stButton"] button:hover { background-color: #1565C0 !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -220,7 +210,7 @@ st.markdown(
 
 tab_predict, tab_history = st.tabs(["Predict", "History"])
 
-# ── predict tab ───────────────────────────────────────────────────────────────
+# predict tab
 with tab_predict:
     teams = load_teams()
     team_names = list(teams.values())
@@ -409,7 +399,7 @@ with tab_predict:
                 )
                 confidence_badge(conf)
 
-# ── history tab ───────────────────────────────────────────────────────────────
+# history tab
 with tab_history:
     predictions = load_predictions()
 

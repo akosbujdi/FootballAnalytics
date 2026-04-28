@@ -1,9 +1,4 @@
 {
-  "402": {
-    "home": "Manchester United FC",
-    "away": "Brentford FC",
-    "date": "2026-04-27T19:00:00Z"
-  },
   "61": {
     "home": "Chelsea FC",
     "away": "Nottingham Forest FC",
@@ -13,5 +8,10 @@
     "home": "Arsenal FC",
     "away": "Fulham FC",
     "date": "2026-05-02T16:30:00Z"
+  },
+  "402": {
+    "home": "Brentford FC",
+    "away": "West Ham United FC",
+    "date": "2026-05-02T14:00:00Z"
   }
 }

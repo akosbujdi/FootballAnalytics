@@ -20,6 +20,7 @@ _cache = {}
 
 
 def _pts(scored, conceded):
+    # 3 for win, 1 for draw, 0 for loss
     return np.where(scored > conceded, 3.0, np.where(scored == conceded, 1.0, 0.0))
 
 
@@ -203,6 +204,7 @@ def _current_form(df):
 
 
 def _h2h_stats(home_team, away_team, df, col_means):
+    # last 5 h2h results between the two teams, falls back to col means if none
     hist = df[
         ((df['homeTeam'] == home_team) & (df['awayTeam'] == away_team)) |
         ((df['homeTeam'] == away_team) & (df['awayTeam'] == home_team))
@@ -224,6 +226,7 @@ def _h2h_stats(home_team, away_team, df, col_means):
 
 
 def _build_predict_row(home_team, away_team, form, col_means, h2h):
+    # assembles a single prediction row from current form and h2h stats
     hf = form.get(home_team, {})
     af = form.get(away_team, {})
 
@@ -288,6 +291,7 @@ def _form_lambdas(home_team, away_team, form, df):
 
 
 def _train(df):
+    # build features and fit the random forest classifier
     df = build_features(df.copy())
     col_means = df[FEATURES].mean().to_dict()
     valid = df[FEATURES + ['_target']].dropna()
@@ -301,6 +305,7 @@ def _train(df):
 
 
 def _get_model(df):
+    # cached wrapper for _train
     key = len(df)
     if key not in _cache:
         _cache[key] = _train(df)

@@ -9,12 +9,13 @@ _cache = {}
 
 
 def _train(df):
+    # build features and fit the xgboost classifier
     df = build_features(df.copy())
     col_means = df[FEATURES].mean().to_dict()
     valid = df[FEATURES + ['_target']].dropna()
     X, y = valid[FEATURES], valid['_target'].astype(int)
     model = xgb.XGBClassifier(
-        n_estimators=300, max_depth=4, learning_rate=0.05,
+        n_estimators=300, max_depth=5, learning_rate=0.05,
         subsample=0.8, colsample_bytree=0.8, min_child_weight=5,
         reg_lambda=2.0, objective='multi:softprob', num_class=3,
         eval_metric='mlogloss', random_state=42, verbosity=0,
@@ -24,6 +25,7 @@ def _train(df):
 
 
 def _get_model(df):
+    # cached wrapper for _train
     key = len(df)
     if key not in _cache:
         _cache[key] = _train(df)
@@ -31,6 +33,7 @@ def _get_model(df):
 
 
 def predict(home_team, away_team, df):
+    # returns (p_home, p_draw, p_away, lambda_home, lambda_away)
     model, col_means = _get_model(df)
     form = _current_form(df)
     h2h = _h2h_stats(home_team, away_team, df, col_means)
