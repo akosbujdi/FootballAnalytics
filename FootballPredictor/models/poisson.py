@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Recency_BIAS = True uses recency bias in logic else not
-RECENCY_BIAS = True
+RECENCY_BIAS = False
 
 # Tunable parameters
 HALF_LIFE_DAYS = 20  # weight halves every N days

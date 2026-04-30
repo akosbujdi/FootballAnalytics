@@ -184,7 +184,7 @@ def append_new_matches():
             is_dup = (
                     (df_hist["homeTeam"] == converted["homeTeam"]) &
                     (df_hist["awayTeam"] == converted["awayTeam"]) &
-                    (df_hist["date"] == converted["date"])
+                    (df_hist["date"].str[:10] == converted["date"][:10])
             )
             if not df_hist[is_dup].empty:
                 continue

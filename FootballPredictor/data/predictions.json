@@ -5,7 +5,7 @@
         "fixture_date": "2026-04-19T15:30:00Z",
         "home_team": "Manchester City FC",
         "away_team": "Arsenal FC",
-        "predicted_score": "1-1"
+        "predicted_score": "2-1"
     },
     {
         "model": "poisson",
@@ -125,7 +125,7 @@
         "fixture_date": "2026-04-21T19:00:00Z",
         "home_team": "Brighton & Hove Albion FC",
         "away_team": "Chelsea FC",
-        "predicted_score": "1-1"
+        "predicted_score": "2-1"
     },
     {
         "model": "poisson",
@@ -134,53 +134,5 @@
         "home_team": "Arsenal FC",
         "away_team": "Fulham FC",
         "predicted_score": "2-0"
-    },
-    {
-        "model": "xgboost",
-        "prediction_date": "2026-04-10T20:14:32.112480",
-        "fixture_date": "2026-04-11T14:00:00Z",
-        "home_team": "Liverpool FC",
-        "away_team": "Fulham FC",
-        "predicted_score": "2-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2026-04-10T20:15:01.334512",
-        "fixture_date": "2026-04-11T14:00:00Z",
-        "home_team": "Chelsea FC",
-        "away_team": "Manchester City FC",
-        "predicted_score": "1-1"
-    },
-    {
-        "model": "random_forest",
-        "prediction_date": "2026-04-10T20:15:44.871234",
-        "fixture_date": "2026-04-11T14:00:00Z",
-        "home_team": "Arsenal FC",
-        "away_team": "AFC Bournemouth",
-        "predicted_score": "2-0"
-    },
-    {
-        "model": "xgboost",
-        "prediction_date": "2026-04-10T20:16:18.445321",
-        "fixture_date": "2026-04-11T14:00:00Z",
-        "home_team": "Nottingham Forest FC",
-        "away_team": "Aston Villa FC",
-        "predicted_score": "1-1"
-    },
-    {
-        "model": "poisson",
-        "prediction_date": "2026-04-10T20:17:02.998765",
-        "fixture_date": "2026-04-11T14:00:00Z",
-        "home_team": "Sunderland AFC",
-        "away_team": "Tottenham Hotspur FC",
-        "predicted_score": "0-2"
-    },
-    {
-        "model": "xgboost",
-        "prediction_date": "2026-04-27T22:31:21.076582",
-        "fixture_date": "2026-05-02T14:00:00Z",
-        "home_team": "Brentford FC",
-        "away_team": "West Ham United FC",
-        "predicted_score": "1-1"
     }
 ]

@@ -10,7 +10,7 @@ sys.path.append(project_root)
 from models import poisson, random_forest, xgboost_model
 
 DATA_PATH = "../data/historical_matches.csv"
-TEST_PERIOD_DAYS = 250
+TEST_PERIOD_DAYS = 200
 MAX_GOALS = 8
 DRAW_THRESHOLD = 0.4  # predict draw if neither H nor A exceeds this confidence
 
